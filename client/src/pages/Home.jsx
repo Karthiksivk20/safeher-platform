@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link, useSearchParams, useNavigate }from 'react-router-dom';\nimport API from '../api';
+import { Link, useSearchParams, useNavigate }from 'react-router-dom';import API from '../api';
 import { useAuth } from '../context/AuthContext';
 
 const FEATURED_ENTREPRENEURS = [

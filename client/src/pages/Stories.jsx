@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link }from 'react-router-dom';\nimport API from '../api';
+import { Link }from 'react-router-dom';import API from '../api';
 
 const STORIES = [
   {

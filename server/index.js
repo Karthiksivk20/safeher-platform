@@ -4,13 +4,20 @@ const cors = require('cors');
 const path = require('path');
 const app = express();
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://safeher-platform.vercel.app"
+];
+
 app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    /\.vercel\.app$/,
-    /\.onrender\.com$/,
-  ],
-  credentials: true,
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
 }));
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
