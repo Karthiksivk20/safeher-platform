@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link }from 'react-router-dom';\nimport API from '../api';
 
 const imgSrc = (image) =>
-  image?.startsWith('http') ? image : image ? `http://localhost:5000/uploads/${image}` : null;
+  image?.startsWith('http') ? image : image ? `${API}/uploads/${image}` : null;
 
 export default function Cart() {
   const [cart, setCart] = useState([]);
@@ -20,7 +20,7 @@ export default function Cart() {
 
   const load = () => {
     setLoading(true);
-    axios.get('http://localhost:5000/api/cart', token())
+    axios.get('${API}/api/cart', token())
       .then(r => setCart(r.data))
       .finally(() => setLoading(false));
   };
@@ -28,12 +28,12 @@ export default function Cart() {
   useEffect(() => { load(); }, []);
 
   const update = async (id, quantity) => {
-    await axios.put(`http://localhost:5000/api/cart/update/${id}`, { quantity }, token());
+    await axios.put(`${API}/api/cart/update/${id}`, { quantity }, token());
     load();
   };
 
   const remove = async (id) => {
-    await axios.delete(`http://localhost:5000/api/cart/remove/${id}`, token());
+    await axios.delete(`${API}/api/cart/remove/${id}`, token());
     showToast('Item removed');
     load();
   };
@@ -44,7 +44,7 @@ export default function Cart() {
     setPlacing(true);
     try {
       const fullAddress = `${address.name}, ${address.phone} | ${address.flat}, ${address.city}, ${address.state} - ${address.pincode}`;
-await axios.post('http://localhost:5000/api/orders/place', { address: fullAddress }, token());
+await axios.post('${API}/api/orders/place', { address: fullAddress }, token());
       showToast('Order placed successfully! 🎉');
       setTimeout(() => navigate('/orders'), 1500);
     } catch {

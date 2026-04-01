@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate }from 'react-router-dom';\nimport API from '../api';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 
 const imgSrc = (image) =>
   image?.startsWith('http') ? image : image
-    ? `http://localhost:5000/uploads/${image}` : null;
+    ? `${API}/uploads/${image}` : null;
 
 function StarRating({ value, onChange, readonly = false }) {
   const [hovered, setHovered] = useState(0);
@@ -50,12 +50,12 @@ export default function ProductDetail() {
   });
 
   const loadProduct = async () => {
-    const { data } = await axios.get(`http://localhost:5000/api/products/${id}`);
+    const { data } = await axios.get(`${API}/api/products/${id}`);
     setProduct(data);
   };
 
   const loadReviews = async () => {
-    const { data } = await axios.get(`http://localhost:5000/api/products/${id}/reviews`);
+    const { data } = await axios.get(`${API}/api/products/${id}/reviews`);
     setReviews(data.reviews);
     setAvgRating(data.avg);
     setTotalReviews(data.total);
@@ -67,7 +67,7 @@ export default function ProductDetail() {
 
   const addToCart = async () => {
     if (!user) return showToast('Please login to add to cart');
-    await axios.post('http://localhost:5000/api/cart/add',
+    await axios.post('${API}/api/cart/add',
       { product_id: id, quantity }, token());
     showToast('Added to cart! 🛒');
   };
@@ -79,10 +79,10 @@ export default function ProductDetail() {
   return showToast('Please fill in all delivery details');
     setOrderLoading(true);
     try {
-      await axios.post('http://localhost:5000/api/cart/add',
+      await axios.post('${API}/api/cart/add',
         { product_id: id, quantity }, token());
       const fullAddress = `${address.name}, ${address.phone} | ${address.flat}, ${address.city}, ${address.state} - ${address.pincode}`;
-await axios.post('http://localhost:5000/api/orders/place',
+await axios.post('${API}/api/orders/place',
   { address: fullAddress }, token());
       showToast('Order placed successfully! 🎉');
       setTimeout(() => navigate('/orders'), 1500);

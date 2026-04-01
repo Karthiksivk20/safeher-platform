@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link }from 'react-router-dom';\nimport API from '../api';
 
 export default function Register() {
   const [step, setStep] = useState(1);
@@ -21,7 +21,7 @@ export default function Register() {
     setError('');
     try {
       await axios.post(
-        'http://localhost:5000/api/auth/register/send-otp',
+        '${API}/api/auth/register/send-otp',
         { email: form.email }
       );
       setMsg(`OTP sent to ${form.email}`);
@@ -38,7 +38,7 @@ export default function Register() {
     setLoading(true);
     setError('');
     try {
-      await axios.post('http://localhost:5000/api/auth/register', {
+      await axios.post('${API}/api/auth/register', {
         ...form, otp
       });
       setMsg('Account created! Redirecting to login...');

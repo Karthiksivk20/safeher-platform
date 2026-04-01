@@ -1,4 +1,6 @@
-import { BrowserRouter, Routes, Route, Link, NavLink, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, NavLink, useNavigate }
+from 'react-router-dom';
+import API from './api';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
@@ -55,7 +57,7 @@ useEffect(() => {
 
   useEffect(() => {
     if (user) {
-      axios.get('http://localhost:5000/api/cart', {
+      axios.get('${API}/api/cart', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       }).then(r => setCartCount(r.data.length)).catch(() => {});
     } else {
@@ -102,7 +104,7 @@ useEffect(() => {
 
     try {
       const { data: cartItems } = await axios.get(
-        'http://localhost:5000/api/cart', { headers });
+        '${API}/api/cart', { headers });
       if (cartItems.length > 0) {
         notifs.push({
           id: 'cart',
@@ -117,7 +119,7 @@ useEffect(() => {
 
     try {
       const { data: orders } = await axios.get(
-        'http://localhost:5000/api/orders/my', { headers });
+        '${API}/api/orders/my', { headers });
       orders.slice(0, 3).forEach(order => {
         if (order.status === 'processing') {
           notifs.push({
@@ -154,7 +156,7 @@ useEffect(() => {
 
     try {
       const { data: posts } = await axios.get(
-        'http://localhost:5000/api/forum');
+        '${API}/api/forum');
       if (posts.length > 0) {
         notifs.push({
           id: 'forum',

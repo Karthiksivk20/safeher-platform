@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useNavigate }from 'react-router-dom';\nimport API from '../api';
+import { Link }from 'react-router-dom';\nimport API from '../api';
 
 
 const imgSrc = (image) =>
-  image?.startsWith('http') ? image : image ? `http://localhost:5000/uploads/${image}` : null;
+  image?.startsWith('http') ? image : image ? `${API}/uploads/${image}` : null;
 
 export default function SellerDashboard() {
   const { user } = useAuth();
@@ -27,13 +27,13 @@ export default function SellerDashboard() {
   const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 2500); };
 
   const load = async () => {
-    const { data } = await axios.get('http://localhost:5000/api/products', token());
+    const { data } = await axios.get('${API}/api/products', token());
     setProducts(data.filter(p => p.seller_id === user?.id));
   };
 
   useEffect(() => {
     if (!user || user.role !== 'seller') { navigate('/'); return; }
-    axios.get('http://localhost:5000/api/products/categories/all')
+    axios.get('${API}/api/products/categories/all')
       .then(r => setCategories(r.data));
     load();
   }, []);
@@ -66,11 +66,11 @@ export default function SellerDashboard() {
       };
       if (editing) {
         if (!image) fd.append('existing_image', editing.image || '');
-        await axios.put(`http://localhost:5000/api/products/${editing.id}`,
+        await axios.put(`${API}/api/products/${editing.id}`,
           fd, { headers });
         showToast('Product updated! ✅');
       } else {
-        await axios.post('http://localhost:5000/api/products', fd, { headers });
+        await axios.post('${API}/api/products', fd, { headers });
         showToast('Product added! ✅');
       }
       resetForm();
@@ -84,7 +84,7 @@ export default function SellerDashboard() {
 
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this product?')) return;
-    await axios.delete(`http://localhost:5000/api/products/${id}`, token());
+    await axios.delete(`${API}/api/products/${id}`, token());
     showToast('Product deleted');
     load();
   };

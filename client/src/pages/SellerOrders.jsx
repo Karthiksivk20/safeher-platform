@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate }from 'react-router-dom';\nimport API from '../api';
 
 const imgSrc = (image) =>
   image?.startsWith('http') ? image : image
-    ? `http://localhost:5000/uploads/${image}` : null;
+    ? `${API}/uploads/${image}` : null;
 
 export default function SellerOrders() {
   const { user } = useAuth();
@@ -19,7 +19,7 @@ export default function SellerOrders() {
 
   useEffect(() => {
     if (!user || user.role !== 'seller') { navigate('/'); return; }
-    axios.get('http://localhost:5000/api/orders/seller', token)
+    axios.get('${API}/api/orders/seller', token)
       .then(r => setOrders(r.data))
       .finally(() => setLoading(false));
   }, []);
@@ -27,12 +27,12 @@ export default function SellerOrders() {
   const updateStatus = async (orderId, status) => {
     try {
       await axios.put(
-        `http://localhost:5000/api/orders/seller/update/${orderId}`,
+        `${API}/api/orders/seller/update/${orderId}`,
         { status },
         token
       );
       showToast(`Order #${orderId} marked as ${status} ✅`);
-      axios.get('http://localhost:5000/api/orders/seller', token)
+      axios.get('${API}/api/orders/seller', token)
         .then(r => setOrders(r.data));
     } catch (err) {
       showToast(err.response?.data?.message || 'Error updating status');

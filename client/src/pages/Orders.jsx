@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate }from 'react-router-dom';\nimport API from '../api';
 
 const imgSrc = (image) =>
   image?.startsWith('http') ? image : image
-    ? `http://localhost:5000/uploads/${image}` : null;
+    ? `${API}/uploads/${image}` : null;
 
 export default function Orders() {
   const [orders, setOrders] = useState([]);
@@ -19,14 +19,14 @@ export default function Orders() {
   if (!window.confirm('Cancel this order?')) return;
   try {
     await axios.put(
-      `http://localhost:5000/api/orders/cancel/${order.id}`,
+      `${API}/api/orders/cancel/${order.id}`,
       { items: JSON.stringify(order.items?.map(i => ({
         product_id: i.product_id, quantity: i.quantity
       })) || []) },
       { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
     );
     showToast('Order cancelled successfully');
-    axios.get('http://localhost:5000/api/orders/my', token)
+    axios.get('${API}/api/orders/my', token)
       .then(r => setOrders(r.data));
   } catch (err) {
     showToast(err.response?.data?.message || 'Cannot cancel this order');
@@ -34,7 +34,7 @@ export default function Orders() {
 };
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/orders/my', token)
+    axios.get('${API}/api/orders/my', token)
       .then(r => setOrders(r.data))
       .finally(() => setLoading(false));
   }, []);
@@ -43,7 +43,7 @@ export default function Orders() {
     if (!rating) return showToast('Please select a star rating');
     try {
       await axios.post(
-        `http://localhost:5000/api/products/${productId}/reviews`,
+        `${API}/api/products/${productId}/reviews`,
         { rating, comment },
         { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
       );
@@ -80,12 +80,12 @@ export default function Orders() {
   if (!window.confirm('Request a return for this order?')) return;
   try {
     await axios.put(
-      `http://localhost:5000/api/orders/return/${orderId}`,
+      `${API}/api/orders/return/${orderId}`,
       {},
       { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
     );
     showToast('Return request submitted successfully');
-    axios.get('http://localhost:5000/api/orders/my', token)
+    axios.get('${API}/api/orders/my', token)
       .then(r => setOrders(r.data));
   } catch (err) {
     showToast(err.response?.data?.message || 'Cannot process return');

@@ -18,13 +18,13 @@ export default function Forum() {
   const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 2500); };
   const token = () => ({ headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
 
-  const load = () => axios.get('http://localhost:5000/api/forum')
+  const load = () => axios.get('${API}/api/forum')
     .then(r => setPosts(r.data));
 
   useEffect(() => { load(); }, []);
 
   const openPost = async (id) => {
-    const { data } = await axios.get(`http://localhost:5000/api/forum/${id}`);
+    const { data } = await axios.get(`${API}/api/forum/${id}`);
     setSelected(data.post);
     setReplies(data.replies);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -32,7 +32,7 @@ export default function Forum() {
 
   const submitPost = async (e) => {
     e.preventDefault();
-    await axios.post('http://localhost:5000/api/forum', newPost, token());
+    await axios.post('${API}/api/forum', newPost, token());
     setNewPost({ title: '', content: '', category: 'general' });
     setShowForm(false);
     showToast('Post created!');
@@ -41,7 +41,7 @@ export default function Forum() {
 
   const deletePost = async (id) => {
     if (!window.confirm('Delete this post and all its replies?')) return;
-    await axios.delete(`http://localhost:5000/api/forum/${id}`, token());
+    await axios.delete(`${API}/api/forum/${id}`, token());
     showToast('Post deleted');
     setSelected(null);
     load();
@@ -50,7 +50,7 @@ export default function Forum() {
   const deleteReply = async (replyId) => {
     if (!window.confirm('Delete this reply?')) return;
     await axios.delete(
-      `http://localhost:5000/api/forum/${selected.id}/reply/${replyId}`,
+      `${API}/api/forum/${selected.id}/reply/${replyId}`,
       token()
     );
     showToast('Reply deleted');
@@ -60,7 +60,7 @@ export default function Forum() {
   const submitReply = async (e) => {
     e.preventDefault();
     await axios.post(
-      `http://localhost:5000/api/forum/${selected.id}/reply`,
+      `${API}/api/forum/${selected.id}/reply`,
       { content: replyText }, token()
     );
     setReplyText('');

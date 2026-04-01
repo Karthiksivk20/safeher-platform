@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate }from 'react-router-dom';\nimport API from '../api';
 import { useAuth } from '../context/AuthContext';
 
 const FEATURED_ENTREPRENEURS = [
@@ -11,7 +11,7 @@ const FEATURED_ENTREPRENEURS = [
 
 const imgSrc = (image) =>
   image?.startsWith('http') ? image : image
-    ? `http://localhost:5000/uploads/${image}` : null;
+    ? `${API}/uploads/${image}` : null;
 
 export default function Home() {
   const [products, setProducts] = useState([]);
@@ -33,7 +33,7 @@ export default function Home() {
       const params = {};
       if (s) params.search = s;
       if (c) params.category = c;
-      const { data } = await axios.get('http://localhost:5000/api/products', { params });
+      const { data } = await axios.get('${API}/api/products', { params });
       setProducts(data);
     } finally {
       setLoading(false);
@@ -43,14 +43,14 @@ export default function Home() {
   useEffect(() => {
     const q = searchParams.get('search') || '';
     setSearch(q);
-    axios.get('http://localhost:5000/api/products/categories/all').then(r => setCategories(r.data));
-    axios.get('http://localhost:5000/api/admin/stats').then(r => setStats(r.data));
+    axios.get('${API}/api/products/categories/all').then(r => setCategories(r.data));
+    axios.get('${API}/api/admin/stats').then(r => setStats(r.data));
     load(q, '');
   }, [searchParams]);
 
   const addToCart = async (product_id) => {
     if (!user) return showToast('Please login to add items to cart');
-    await axios.post('http://localhost:5000/api/cart/add',
+    await axios.post('${API}/api/cart/add',
       { product_id, quantity: 1 },
       { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
     );

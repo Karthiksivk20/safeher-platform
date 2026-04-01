@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate }from 'react-router-dom';\nimport API from '../api';
 
 export default function AdminDashboard() {
   const { user } = useAuth();
@@ -16,31 +16,31 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (!user || user.role !== 'admin') { navigate('/'); return; }
-    axios.get('http://localhost:5000/api/admin/users', token()).then(r => setUsers(r.data));
-    axios.get('http://localhost:5000/api/admin/orders', token()).then(r => setOrders(r.data));
+    axios.get('${API}/api/admin/users', token()).then(r => setUsers(r.data));
+    axios.get('${API}/api/admin/orders', token()).then(r => setOrders(r.data));
   }, []);
 
   const updateRole = async (id, role) => {
-    await axios.put(`http://localhost:5000/api/admin/users/${id}/role`, { role }, token());
+    await axios.put(`${API}/api/admin/users/${id}/role`, { role }, token());
     showToast('Role updated!');
-    axios.get('http://localhost:5000/api/admin/users', token()).then(r => setUsers(r.data));
+    axios.get('${API}/api/admin/users', token()).then(r => setUsers(r.data));
   };
 
   const deleteUser = async (id, name) => {
   if (!window.confirm(`Remove ${name} from SafeHer? This cannot be undone.`)) return;
   try {
-    await axios.delete(`http://localhost:5000/api/admin/users/${id}`, token());
+    await axios.delete(`${API}/api/admin/users/${id}`, token());
     showToast('User removed successfully');
-    axios.get('http://localhost:5000/api/admin/users', token()).then(r => setUsers(r.data));
+    axios.get('${API}/api/admin/users', token()).then(r => setUsers(r.data));
   } catch (err) {
     showToast(err.response?.data?.message || 'Could not remove user');
   }
 };
 
   const updateOrderStatus = async (id, status) => {
-    await axios.put(`http://localhost:5000/api/admin/orders/${id}/status`, { status }, token());
+    await axios.put(`${API}/api/admin/orders/${id}/status`, { status }, token());
     showToast('Order status updated!');
-    axios.get('http://localhost:5000/api/admin/orders', token()).then(r => setOrders(r.data));
+    axios.get('${API}/api/admin/orders', token()).then(r => setOrders(r.data));
   };
 
   const stats = [
