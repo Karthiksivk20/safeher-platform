@@ -136,7 +136,7 @@ await axios.post('http://localhost:5000/api/orders/place',
         {/* Image */}
         <div style={{ borderRadius: 20, overflow: 'hidden',
           background: 'linear-gradient(135deg, #f0eeff, #ffe4f0)',
-          height: 'clamp(260px, 40vw, 420px)',, display: 'flex', alignItems: 'center',
+          height: 'clamp(260px, 40vw, 420px)', display: 'flex', alignItems: 'center',
           justifyContent: 'center' }}>
           {imgSrc(product.image)
             ? <img src={imgSrc(product.image)} alt={product.name}
