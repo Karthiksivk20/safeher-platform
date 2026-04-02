@@ -5,7 +5,6 @@ const path = require('path');
 const app = express();
 
 const allowedOrigins = [
-  "http://localhost:5173",
   "https://safeher-platform.vercel.app"
 ];
 
