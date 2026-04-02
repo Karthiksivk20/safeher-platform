@@ -21,7 +21,7 @@ export default function Register() {
     setError('');
     try {
       await axios.post(
-        `${API}/api/auth/register/send-otp',
+        https://safeher-backend-uyzs.onrender.com/api/auth/register/send-otp',
         { email: form.email }
       );
       setMsg(`OTP sent to ${form.email}`);
@@ -38,7 +38,7 @@ export default function Register() {
     setLoading(true);
     setError('');
     try {
-      await axios.post(`${API}/api/auth/register', {
+      await axios.post(https://safeher-backend-uyzs.onrender.com/api/auth/register', {
         ...form, otp
       });
       setMsg('Account created! Redirecting to login...');

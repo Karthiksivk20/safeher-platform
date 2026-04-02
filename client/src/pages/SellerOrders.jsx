@@ -19,7 +19,7 @@ export default function SellerOrders() {
 
   useEffect(() => {
     if (!user || user.role !== 'seller') { navigate('/'); return; }
-    axios.get(`${API}/api/orders/seller', token)
+    axios.get(https://safeher-backend-uyzs.onrender.com/api/orders/seller', token)
       .then(r => setOrders(r.data))
       .finally(() => setLoading(false));
   }, []);
@@ -32,7 +32,7 @@ export default function SellerOrders() {
         token
       );
       showToast(`Order #${orderId} marked as ${status} ✅`);
-      axios.get(`${API}/api/orders/seller', token)
+      axios.get(https://safeher-backend-uyzs.onrender.com/api/orders/seller', token)
         .then(r => setOrders(r.data));
     } catch (err) {
       showToast(err.response?.data?.message || 'Error updating status');

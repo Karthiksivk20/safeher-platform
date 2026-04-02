@@ -67,7 +67,7 @@ export default function ProductDetail() {
 
   const addToCart = async () => {
     if (!user) return showToast('Please login to add to cart');
-    await axios.post(`${API}/api/cart/add',
+    await axios.post(https://safeher-backend-uyzs.onrender.com/api/cart/add',
       { product_id: id, quantity }, token());
     showToast('Added to cart! 🛒');
   };
@@ -79,10 +79,10 @@ export default function ProductDetail() {
   return showToast('Please fill in all delivery details');
     setOrderLoading(true);
     try {
-      await axios.post(`${API}/api/cart/add',
+      await axios.post(https://safeher-backend-uyzs.onrender.com/api/cart/add',
         { product_id: id, quantity }, token());
       const fullAddress = `${address.name}, ${address.phone} | ${address.flat}, ${address.city}, ${address.state} - ${address.pincode}`;
-await axios.post(`${API}/api/orders/place',
+await axios.post(https://safeher-backend-uyzs.onrender.com/api/orders/place',
   { address: fullAddress }, token());
       showToast('Order placed successfully! 🎉');
       setTimeout(() => navigate('/orders'), 1500);
