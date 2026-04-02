@@ -1,2 +1,3 @@
-const API = import.meta.env.VITE_API_URL || '${API}';
+const API = "https://safeher-backend-uyzs.onrender.com";
+
 export default API;
