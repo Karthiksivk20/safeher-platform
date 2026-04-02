@@ -29,13 +29,13 @@ export default function SellerDashboard() {
   const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 2500); };
 
   const load = async () => {
-    const { data } = await axios.get('${API}/api/products', token());
+    const { data } = await axios.get(`${API}/api/products', token());
     setProducts(data.filter(p => p.seller_id === user?.id));
   };
 
   useEffect(() => {
     if (!user || user.role !== 'seller') { navigate('/'); return; }
-    axios.get('${API}/api/products/categories/all')
+    axios.get(`${API}/api/products/categories/all')
       .then(r => setCategories(r.data));
     load();
   }, []);
@@ -72,7 +72,7 @@ export default function SellerDashboard() {
           fd, { headers });
         showToast('Product updated! ✅');
       } else {
-        await axios.post('${API}/api/products', fd, { headers });
+        await axios.post(`${API}/api/products', fd, { headers });
         showToast('Product added! ✅');
       }
       resetForm();

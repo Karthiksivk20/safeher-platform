@@ -29,7 +29,7 @@ export default function IncidentMap() {
   const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 2500); };
   const token = () => ({ headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
 
-  const load = () => axios.get('${API}/api/incidents')
+  const load = () => axios.get(`${API}/api/incidents')
     .then(r => setIncidents(r.data));
 
   const deleteIncident = async (id) => {
@@ -49,7 +49,7 @@ export default function IncidentMap() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await axios.post('${API}/api/incidents', {
+    await axios.post(`${API}/api/incidents', {
       title: form.title, description: form.description,
       category: form.category, latitude: form.lat, longitude: form.lng,
     }, token());

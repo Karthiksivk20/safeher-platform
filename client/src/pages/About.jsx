@@ -5,7 +5,7 @@ function StatsGrid() {
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
-    axios.get('${API}/api/admin/stats')
+    axios.get(`${API}/api/admin/stats')
       .then(r => setStats(r.data))
       .catch(() => {});
   }, []);

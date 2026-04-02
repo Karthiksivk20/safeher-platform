@@ -16,14 +16,14 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (!user || user.role !== 'admin') { navigate('/'); return; }
-    axios.get('${API}/api/admin/users', token()).then(r => setUsers(r.data));
-    axios.get('${API}/api/admin/orders', token()).then(r => setOrders(r.data));
+    axios.get(`${API}/api/admin/users', token()).then(r => setUsers(r.data));
+    axios.get(`${API}/api/admin/orders', token()).then(r => setOrders(r.data));
   }, []);
 
   const updateRole = async (id, role) => {
     await axios.put(`${API}/api/admin/users/${id}/role`, { role }, token());
     showToast('Role updated!');
-    axios.get('${API}/api/admin/users', token()).then(r => setUsers(r.data));
+    axios.get(`${API}/api/admin/users', token()).then(r => setUsers(r.data));
   };
 
   const deleteUser = async (id, name) => {
@@ -31,7 +31,7 @@ export default function AdminDashboard() {
   try {
     await axios.delete(`${API}/api/admin/users/${id}`, token());
     showToast('User removed successfully');
-    axios.get('${API}/api/admin/users', token()).then(r => setUsers(r.data));
+    axios.get(`${API}/api/admin/users', token()).then(r => setUsers(r.data));
   } catch (err) {
     showToast(err.response?.data?.message || 'Could not remove user');
   }
@@ -40,7 +40,7 @@ export default function AdminDashboard() {
   const updateOrderStatus = async (id, status) => {
     await axios.put(`${API}/api/admin/orders/${id}/status`, { status }, token());
     showToast('Order status updated!');
-    axios.get('${API}/api/admin/orders', token()).then(r => setOrders(r.data));
+    axios.get(`${API}/api/admin/orders', token()).then(r => setOrders(r.data));
   };
 
   const stats = [

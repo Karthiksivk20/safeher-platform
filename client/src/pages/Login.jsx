@@ -16,7 +16,7 @@ export default function Login() {
     setError('');
     try {
       const { data } = await axios.post(
-        '${API}/api/auth/login', form);
+        `${API}/api/auth/login', form);
       login(data.token, data.user);
       navigate('/');
     } catch (err) {

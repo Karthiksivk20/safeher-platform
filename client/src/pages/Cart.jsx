@@ -21,7 +21,7 @@ export default function Cart() {
 
   const load = () => {
     setLoading(true);
-    axios.get('${API}/api/cart', token())
+    axios.get(`${API}/api/cart', token())
       .then(r => setCart(r.data))
       .finally(() => setLoading(false));
   };
@@ -45,7 +45,7 @@ export default function Cart() {
     setPlacing(true);
     try {
       const fullAddress = `${address.name}, ${address.phone} | ${address.flat}, ${address.city}, ${address.state} - ${address.pincode}`;
-await axios.post('${API}/api/orders/place', { address: fullAddress }, token());
+await axios.post(`${API}/api/orders/place', { address: fullAddress }, token());
       showToast('Order placed successfully! 🎉');
       setTimeout(() => navigate('/orders'), 1500);
     } catch {

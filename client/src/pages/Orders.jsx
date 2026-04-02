@@ -26,7 +26,7 @@ export default function Orders() {
       { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
     );
     showToast('Order cancelled successfully');
-    axios.get('${API}/api/orders/my', token)
+    axios.get(`${API}/api/orders/my', token)
       .then(r => setOrders(r.data));
   } catch (err) {
     showToast(err.response?.data?.message || 'Cannot cancel this order');
@@ -34,7 +34,7 @@ export default function Orders() {
 };
 
   useEffect(() => {
-    axios.get('${API}/api/orders/my', token)
+    axios.get(`${API}/api/orders/my', token)
       .then(r => setOrders(r.data))
       .finally(() => setLoading(false));
   }, []);
@@ -85,7 +85,7 @@ export default function Orders() {
       { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
     );
     showToast('Return request submitted successfully');
-    axios.get('${API}/api/orders/my', token)
+    axios.get(`${API}/api/orders/my', token)
       .then(r => setOrders(r.data));
   } catch (err) {
     showToast(err.response?.data?.message || 'Cannot process return');
