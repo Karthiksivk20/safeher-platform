@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { useNavigate, Link }from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+
 const API = 'https://safeher-backend-uyzs.onrender.com';
 
 export default function Register() {
   const [step, setStep] = useState(1);
-  const [form, setForm] = useState({
-    name: '', email: '', password: '', role: 'buyer'
-  });
+  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'buyer' });
   const [otp, setOtp] = useState('');
   const [msg, setMsg] = useState('');
   const [error, setError] = useState('');
@@ -21,11 +20,8 @@ export default function Register() {
     setLoading(true);
     setError('');
     try {
-      await axios.post(
-        'https://safeher-backend-uyzs.onrender.com/api/auth/register/send-otp',
-        { email: form.email }
-      );
-      setMsg(`OTP sent to ${form.email}`);
+      await axios.post(`${API}/api/auth/register/send-otp`, { email: form.email });
+      setMsg(`OTP sent to ${form.email}. Check your inbox and spam folder.`);
       setStep(2);
     } catch (err) {
       setError(err.response?.data?.message || 'Could not send OTP');
@@ -39,9 +35,7 @@ export default function Register() {
     setLoading(true);
     setError('');
     try {
-      await axios.post('https://safeher-backend-uyzs.onrender.com/api/auth/register', {
-        ...form, otp
-      });
+      await axios.post(`${API}/api/auth/register`, { ...form, otp });
       setMsg('Account created! Redirecting to login...');
       setTimeout(() => navigate('/login'), 1500);
     } catch (err) {
@@ -69,7 +63,7 @@ export default function Register() {
             justifyContent: 'center', fontSize: 24 }}>🌸</div>
           <h2 style={{ fontFamily: 'Playfair Display, serif', fontSize: 28,
             fontWeight: 600, marginBottom: 8 }}>
-            {step === 1 ? 'Join SafeHer' : 'Verify your email'}
+            {step === 1 ? 'Join SafeHer' : 'Verify Your Email'}
           </h2>
           <p style={{ color: '#888', fontSize: 14 }}>
             {step === 1
@@ -89,8 +83,10 @@ export default function Register() {
                 color: step >= s ? '#fff' : '#aaa',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: 12, fontWeight: 700 }}>{s}</div>
-              {s < 2 && <div style={{ width: 40, height: 2,
-                background: step > s ? '#7F77DD' : '#f0eeff' }} />}
+              {s < 2 && (
+                <div style={{ width: 40, height: 2,
+                  background: step > s ? '#7F77DD' : '#f0eeff' }} />
+              )}
             </div>
           ))}
         </div>
@@ -98,14 +94,16 @@ export default function Register() {
         <div style={{ background: '#fff', borderRadius: 20, padding: 32,
           boxShadow: '0 4px 32px rgba(127,119,221,0.12)' }}>
 
-          {msg && <div style={{ background: '#f0fff4',
-            border: '1px solid #b2f5d0', color: '#276749',
-            padding: '10px 14px', borderRadius: 10,
-            fontSize: 13, marginBottom: 16 }}>{msg}</div>}
-          {error && <div style={{ background: '#fff0f0',
-            border: '1px solid #ffd0d0', color: '#c0392b',
-            padding: '10px 14px', borderRadius: 10,
-            fontSize: 13, marginBottom: 16 }}>{error}</div>}
+          {msg && (
+            <div style={{ background: '#f0fff4', border: '1px solid #b2f5d0',
+              color: '#276749', padding: '10px 14px', borderRadius: 10,
+              fontSize: 13, marginBottom: 16 }}>{msg}</div>
+          )}
+          {error && (
+            <div style={{ background: '#fff0f0', border: '1px solid #ffd0d0',
+              color: '#c0392b', padding: '10px 14px', borderRadius: 10,
+              fontSize: 13, marginBottom: 16 }}>{error}</div>
+          )}
 
           {step === 1 ? (
             <form onSubmit={sendOTP}
@@ -113,8 +111,7 @@ export default function Register() {
               <div>
                 <label style={{ fontSize: 13, fontWeight: 500, color: '#555',
                   display: 'block', marginBottom: 6 }}>Full Name</label>
-                <input placeholder="Your full name"
-                  value={form.name}
+                <input placeholder="Your full name" value={form.name}
                   onChange={e => setForm({ ...form, name: e.target.value })}
                   required />
               </div>
@@ -124,7 +121,7 @@ export default function Register() {
                 <input placeholder="you@example.com" type="email"
                   value={form.email}
                   onChange={e => setForm({ ...form, email: e.target.value })}
-                  required />
+                  autoComplete="new-email" required />
               </div>
               <div>
                 <label style={{ fontSize: 13, fontWeight: 500, color: '#555',
@@ -132,24 +129,22 @@ export default function Register() {
                 <input placeholder="Min 6 characters" type="password"
                   value={form.password}
                   onChange={e => setForm({ ...form, password: e.target.value })}
-                  required />
+                  autoComplete="new-password" required />
               </div>
               <div>
                 <label style={{ fontSize: 13, fontWeight: 500, color: '#555',
                   display: 'block', marginBottom: 8 }}>I want to join as</label>
-                <div style={{ display: 'grid',
-                  gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                   {roles.map(r => (
                     <div key={r.value}
                       onClick={() => setForm({ ...form, role: r.value })}
-                      style={{ border: `2px solid ${form.role === r.value
-                        ? '#7F77DD' : '#ede8ff'}`,
-                        borderRadius: 12, padding: '12px 14px',
-                        cursor: 'pointer',
+                      style={{ border: `2px solid ${form.role === r.value ? '#7F77DD' : '#ede8ff'}`,
+                        borderRadius: 12, padding: '12px 14px', cursor: 'pointer',
                         background: form.role === r.value ? '#f0eeff' : '#fff',
                         transition: 'all 0.2s' }}>
-                      <div style={{ fontWeight: 600, fontSize: 14,
-                        marginBottom: 2 }}>{r.label}</div>
+                      <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 2 }}>
+                        {r.label}
+                      </div>
                       <div style={{ fontSize: 11, color: '#999' }}>{r.desc}</div>
                     </div>
                   ))}
@@ -169,16 +164,14 @@ export default function Register() {
               style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               <div>
                 <label style={{ fontSize: 13, fontWeight: 500, color: '#555',
-                  display: 'block', marginBottom: 6 }}>
-                  Enter 6-digit OTP
-                </label>
+                  display: 'block', marginBottom: 6 }}>Enter 6-digit OTP</label>
                 <input placeholder="123456" type="text" maxLength={6}
                   value={otp} onChange={e => setOtp(e.target.value)}
                   style={{ fontSize: 28, letterSpacing: 10,
                     textAlign: 'center', fontWeight: 700 }}
                   required />
                 <p style={{ fontSize: 12, color: '#aaa', marginTop: 6 }}>
-                  Check your email inbox and spam folder
+                  Check your inbox and spam folder
                 </p>
               </div>
               <button type="submit" disabled={loading} style={{
@@ -193,14 +186,13 @@ export default function Register() {
                 onClick={() => { setStep(1); setError(''); setMsg(''); }}
                 style={{ background: 'none', border: 'none', color: '#7F77DD',
                   fontSize: 13, cursor: 'pointer', fontFamily: 'inherit' }}>
-                ← Back to registration
+                ← Back
               </button>
             </form>
           )}
 
           {step === 1 && (
-            <p style={{ marginTop: 20, textAlign: 'center',
-              color: '#888', fontSize: 14 }}>
+            <p style={{ marginTop: 20, textAlign: 'center', color: '#888', fontSize: 14 }}>
               Already have an account?{' '}
               <Link to="/login" style={{ color: '#7F77DD', fontWeight: 500 }}>
                 Login
