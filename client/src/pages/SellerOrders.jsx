@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate }from 'react-router-dom';import API from '../api';
+import { useNavigate }from 'react-router-dom';
+const API = 'https://safeher-backend-uyzs.onrender.com';
 
 const imgSrc = (image) =>
   image?.startsWith('http') ? image : image

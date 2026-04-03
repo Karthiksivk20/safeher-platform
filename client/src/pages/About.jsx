@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+const API = 'https://safeher-backend-uyzs.onrender.com';
 
 function StatsGrid() {
   const [stats, setStats] = useState(null);

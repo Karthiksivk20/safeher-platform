@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link }from 'react-router-dom';
-import API from '../api';
+const API = 'https://safeher-backend-uyzs.onrender.com';
 
 const imgSrc = (image) =>
   image?.startsWith('http') ? image : image ? `${API}/uploads/${image}` : null;

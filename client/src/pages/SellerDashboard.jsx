@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate }from 'react-router-dom';
 
 import { Link }from 'react-router-dom';
-import API from '../api';
+const API = 'https://safeher-backend-uyzs.onrender.com';
 
 
 const imgSrc = (image) =>

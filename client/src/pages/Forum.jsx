@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+const API = 'https://safeher-backend-uyzs.onrender.com';
 
 const CATEGORIES = ['general', 'support', 'legal', 'resources', 'success-stories'];
 
