@@ -137,4 +137,91 @@ router.put('/seller/update/:id', auth, async (req, res) => {
   res.json({ message: 'Order status updated' });
 });
 
+const Razorpay = require('razorpay');
+const crypto = require('crypto');
+
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
+
+router.post('/create-payment', auth, async (req, res) => {
+  try {
+    const { amount } = req.body;
+    const order = await razorpay.orders.create({
+      amount: Math.round(amount * 100),
+      currency: 'INR',
+      receipt: `receipt_${Date.now()}`,
+    });
+    res.json({
+      orderId: order.id,
+      amount: order.amount,
+      currency: order.currency,
+      keyId: process.env.RAZORPAY_KEY_ID,
+    });
+  } catch (err) {
+    console.error('Razorpay error:', err);
+    res.status(500).json({ message: 'Payment initialization failed' });
+  }
+});
+
+router.post('/verify-payment', auth, async (req, res) => {
+  try {
+    const {
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+      address,
+    } = req.body;
+
+    const sign = razorpay_order_id + '|' + razorpay_payment_id;
+    const expectedSign = crypto
+      .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
+      .update(sign)
+      .digest('hex');
+
+    if (expectedSign !== razorpay_signature)
+      return res.status(400).json({ message: 'Payment verification failed' });
+
+    const [cartItems] = await db.query(
+      `SELECT c.quantity, p.price, p.id as product_id, p.stock
+       FROM cart c JOIN products p ON c.product_id = p.id
+       WHERE c.user_id = ?`,
+      [req.user.id]
+    );
+
+    if (!cartItems.length)
+      return res.status(400).json({ message: 'Cart is empty' });
+
+    const total = cartItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
+
+    const [order] = await db.query(
+      'INSERT INTO orders (user_id, total, address, status) VALUES (?,?,?,?)',
+      [req.user.id, total, address, 'processing']
+    );
+
+    for (const item of cartItems) {
+      await db.query(
+        'INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?,?,?,?)',
+        [order.insertId, item.product_id, item.quantity, item.price]
+      );
+      await db.query(
+        'UPDATE products SET stock = stock - ? WHERE id = ?',
+        [item.quantity, item.product_id]
+      );
+    }
+
+    await db.query('DELETE FROM cart WHERE user_id = ?', [req.user.id]);
+
+    res.json({
+      message: 'Payment successful! Order placed.',
+      order_id: order.insertId,
+      payment_id: razorpay_payment_id,
+    });
+  } catch (err) {
+    console.error('Verify payment error:', err);
+    res.status(500).json({ message: 'Order placement failed' });
+  }
+});
+
 module.exports = router;

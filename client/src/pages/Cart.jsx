@@ -1,27 +1,31 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate, Link }from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+
 const API = 'https://safeher-backend-uyzs.onrender.com';
 
 const imgSrc = (image) =>
-  image?.startsWith('http') ? image : image ? `${API}/uploads/${image}` : null;
+  image?.startsWith('http') ? image : image
+    ? `${API}/uploads/${image}` : null;
 
 export default function Cart() {
   const [cart, setCart] = useState([]);
   const [address, setAddress] = useState({
-  name: '', phone: '', flat: '', city: '', state: '', pincode: ''
-});
+    name: '', phone: '', flat: '', city: '', state: '', pincode: ''
+  });
   const [loading, setLoading] = useState(true);
-  const [placing, setPlacing] = useState(false);
+  const [paying, setPaying] = useState(false);
   const [toast, setToast] = useState('');
   const navigate = useNavigate();
 
-  const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 2500); };
-  const token = () => ({ headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
+  const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 3000); };
+  const token = () => ({
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+  });
 
   const load = () => {
     setLoading(true);
-    axios.get('https://safeher-backend-uyzs.onrender.com/api/cart', token())
+    axios.get(`${API}/api/cart`, token())
       .then(r => setCart(r.data))
       .finally(() => setLoading(false));
   };
@@ -39,19 +43,78 @@ export default function Cart() {
     load();
   };
 
-  const checkout = async () => {
-    if (!address.name || !address.phone || !address.flat || !address.city || !address.state || !address.pincode)
-  return showToast('Please fill in all delivery details');
-    setPlacing(true);
+  const validateAddress = () => {
+    if (!address.name) return 'Please enter recipient name';
+    if (!address.phone || address.phone.length < 10) return 'Please enter valid phone number';
+    if (!address.flat) return 'Please enter flat/house number';
+    if (!address.city) return 'Please enter city';
+    if (!address.state) return 'Please enter state';
+    if (!address.pincode || address.pincode.length < 6) return 'Please enter valid pincode';
+    return null;
+  };
+
+  const handlePayment = async () => {
+    const err = validateAddress();
+    if (err) return showToast(err);
+    setPaying(true);
     try {
       const fullAddress = `${address.name}, ${address.phone} | ${address.flat}, ${address.city}, ${address.state} - ${address.pincode}`;
-await axios.post('https://safeher-backend-uyzs.onrender.com/api/orders/place', { address: fullAddress }, token());
-      showToast('Order placed successfully! 🎉');
-      setTimeout(() => navigate('/orders'), 1500);
-    } catch {
-      showToast('Something went wrong');
-    } finally {
-      setPlacing(false);
+      const total = cart.reduce((sum, i) => sum + Number(i.price) * i.quantity, 0);
+
+      const { data } = await axios.post(
+        `${API}/api/orders/create-payment`,
+        { amount: total },
+        token()
+      );
+
+      const options = {
+        key: data.keyId,
+        amount: data.amount,
+        currency: data.currency,
+        name: 'SafeHer',
+        description: 'Women Entrepreneurship Marketplace',
+        image: 'https://i.imgur.com/n5tjHFD.png',
+        order_id: data.orderId,
+        handler: async (response) => {
+          try {
+            const result = await axios.post(
+              `${API}/api/orders/verify-payment`,
+              {
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                address: fullAddress,
+              },
+              token()
+            );
+            showToast('Payment successful! 🎉');
+            setTimeout(() => navigate('/orders'), 1500);
+          } catch {
+            showToast('Payment verification failed. Contact support.');
+          }
+        },
+        prefill: {
+          name: address.name,
+          contact: address.phone,
+        },
+        theme: { color: '#7F77DD' },
+        modal: {
+          ondismiss: () => {
+            setPaying(false);
+            showToast('Payment cancelled');
+          }
+        }
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.on('payment.failed', () => {
+        showToast('Payment failed. Please try again.');
+        setPaying(false);
+      });
+      rzp.open();
+    } catch (err) {
+      showToast(err.response?.data?.message || 'Payment failed');
+      setPaying(false);
     }
   };
 
@@ -70,11 +133,11 @@ await axios.post('https://safeher-backend-uyzs.onrender.com/api/orders/place', {
     <div style={{ maxWidth: 900, margin: '32px auto', padding: '0 24px 60px' }}>
 
       {toast && (
-        <div style={{ position: 'fixed', top: 80, right: 24, background: '#1a1a2e',
-          color: '#fff', padding: '12px 20px', borderRadius: 10, fontSize: 14,
-          fontWeight: 500, zIndex: 999, boxShadow: '0 4px 20px rgba(0,0,0,0.15)' }}>
-          {toast}
-        </div>
+        <div style={{ position: 'fixed', top: 80, right: 16,
+          background: '#1a1a2e', color: '#fff', padding: '12px 20px',
+          borderRadius: 10, fontSize: 14, fontWeight: 500,
+          zIndex: 999, boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+          maxWidth: 300 }}>{toast}</div>
       )}
 
       <div style={{ marginBottom: 28 }}>
@@ -93,7 +156,8 @@ await axios.post('https://safeher-backend-uyzs.onrender.com/api/orders/place', {
           <p style={{ color: '#888', marginBottom: 24 }}>
             Discover amazing products from women entrepreneurs
           </p>
-          <Link to="/" style={{ background: 'linear-gradient(135deg, #7F77DD, #D4537E)',
+          <Link to="/" style={{
+            background: 'linear-gradient(135deg, #7F77DD, #D4537E)',
             color: '#fff', padding: '12px 28px', borderRadius: 12,
             fontWeight: 600, fontSize: 14 }}>
             Start Shopping 🛍️
@@ -101,7 +165,8 @@ await axios.post('https://safeher-backend-uyzs.onrender.com/api/orders/place', {
         </div>
       ) : (
         <div style={{ display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gap: 24 }}>
 
           {/* Cart Items */}
           <div>
@@ -110,13 +175,15 @@ await axios.post('https://safeher-backend-uyzs.onrender.com/api/orders/place', {
                 padding: 16, marginBottom: 12,
                 boxShadow: '0 2px 12px rgba(127,119,221,0.07)',
                 display: 'flex', gap: 14, alignItems: 'center' }}>
-                <div style={{ width: 80, height: 80, borderRadius: 12, flexShrink: 0,
+                <div style={{ width: 80, height: 80, borderRadius: 12,
+                  flexShrink: 0,
                   background: 'linear-gradient(135deg, #f0eeff, #ffe4f0)',
                   overflow: 'hidden', display: 'flex',
                   alignItems: 'center', justifyContent: 'center' }}>
                   {imgSrc(item.image)
                     ? <img src={imgSrc(item.image)} alt={item.name}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        style={{ width: '100%', height: '100%',
+                          objectFit: 'cover' }} />
                     : <span style={{ fontSize: 32 }}>🛍️</span>}
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
@@ -134,17 +201,17 @@ await axios.post('https://safeher-backend-uyzs.onrender.com/api/orders/place', {
                   <button onClick={() => update(item.id, item.quantity - 1)}
                     style={{ width: 32, height: 32, borderRadius: 8,
                       border: '1.5px solid #ede8ff', background: '#fff',
-                      fontSize: 18, cursor: 'pointer', display: 'flex',
-                      alignItems: 'center', justifyContent: 'center',
-                      color: '#7F77DD', fontWeight: 700 }}>−</button>
+                      fontSize: 18, cursor: 'pointer', color: '#7F77DD',
+                      fontWeight: 700, display: 'flex', alignItems: 'center',
+                      justifyContent: 'center' }}>−</button>
                   <span style={{ fontWeight: 600, fontSize: 15,
                     minWidth: 24, textAlign: 'center' }}>{item.quantity}</span>
                   <button onClick={() => update(item.id, item.quantity + 1)}
                     style={{ width: 32, height: 32, borderRadius: 8,
                       border: '1.5px solid #ede8ff', background: '#fff',
-                      fontSize: 18, cursor: 'pointer', display: 'flex',
-                      alignItems: 'center', justifyContent: 'center',
-                      color: '#7F77DD', fontWeight: 700 }}>+</button>
+                      fontSize: 18, cursor: 'pointer', color: '#7F77DD',
+                      fontWeight: 700, display: 'flex', alignItems: 'center',
+                      justifyContent: 'center' }}>+</button>
                 </div>
                 <div style={{ textAlign: 'right', minWidth: 90 }}>
                   <p style={{ fontWeight: 700, fontSize: 15 }}>
@@ -166,73 +233,68 @@ await axios.post('https://safeher-backend-uyzs.onrender.com/api/orders/place', {
               position: 'sticky', top: 120 }}>
               <h3 style={{ fontFamily: 'Playfair Display, serif',
                 fontSize: 18, fontWeight: 600, marginBottom: 16 }}>
-                Order Summary
+                Delivery Details
               </h3>
-              <div style={{ display: 'flex', justifyContent: 'space-between',
-                marginBottom: 8, fontSize: 14, color: '#666' }}>
-                <span>Subtotal ({itemCount} items)</span>
-                <span>₹{total.toLocaleString('en-IN')}</span>
+
+              <div style={{ display: 'grid',
+                gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 8 }}>
+                <input placeholder="Recipient Name *"
+                  value={address.name}
+                  onChange={e => setAddress({ ...address, name: e.target.value })} />
+                <input placeholder="Phone Number *" type="tel"
+                  value={address.phone}
+                  onChange={e => setAddress({ ...address, phone: e.target.value })} />
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between',
-                marginBottom: 8, fontSize: 14, color: '#666' }}>
-                <span>Delivery</span>
-                <span style={{ color: '#1D9E75', fontWeight: 500 }}>FREE</span>
-              </div>
-              <div style={{ borderTop: '1px solid #f0eeff', marginTop: 12,
-                paddingTop: 12, display: 'flex', justifyContent: 'space-between',
-                fontWeight: 700, fontSize: 16 }}>
-                <span>Total</span>
-                <span style={{ background: 'linear-gradient(135deg, #7F77DD, #D4537E)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent' }}>
-                  ₹{total.toLocaleString('en-IN')}
-                </span>
+              <input placeholder="Flat / House No / Street *"
+                value={address.flat}
+                onChange={e => setAddress({ ...address, flat: e.target.value })}
+                style={{ marginBottom: 8 }} />
+              <div style={{ display: 'grid',
+                gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginBottom: 16 }}>
+                <input placeholder="City *" value={address.city}
+                  onChange={e => setAddress({ ...address, city: e.target.value })} />
+                <input placeholder="State *" value={address.state}
+                  onChange={e => setAddress({ ...address, state: e.target.value })} />
+                <input placeholder="Pincode *" value={address.pincode}
+                  onChange={e => setAddress({ ...address, pincode: e.target.value })} />
               </div>
 
-              <div style={{ marginTop: 20 }}>
-               <label style={{ fontSize: 13, fontWeight: 500,
-  color: '#555', display: 'block', marginBottom: 10 }}>
-  Delivery Details
-</label>
-<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr',
-  gap: 8, marginBottom: 8 }}>
-  <input placeholder="Recipient Name *"
-    value={address.name}
-    onChange={e => setAddress({ ...address, name: e.target.value })} />
-  <input placeholder="Phone Number *" type="tel"
-    value={address.phone}
-    onChange={e => setAddress({ ...address, phone: e.target.value })} />
-</div>
-<input placeholder="Flat / House No / Street *"
-  value={address.flat}
-  onChange={e => setAddress({ ...address, flat: e.target.value })}
-  style={{ marginBottom: 8 }} />
-<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr',
-  gap: 8, marginBottom: 12 }}>
-  <input placeholder="City *"
-    value={address.city}
-    onChange={e => setAddress({ ...address, city: e.target.value })} />
-  <input placeholder="State *"
-    value={address.state}
-    onChange={e => setAddress({ ...address, state: e.target.value })} />
-  <input placeholder="Pincode *" type="number"
-    value={address.pincode}
-    onChange={e => setAddress({ ...address, pincode: e.target.value })} />
-</div>
-                <button onClick={checkout} disabled={placing}
-                  style={{ width: '100%',
-                    background: 'linear-gradient(135deg, #7F77DD, #D4537E)',
-                    color: '#fff', border: 'none', padding: '13px',
-                    borderRadius: 12, fontSize: 15, fontWeight: 600,
-                    cursor: placing ? 'not-allowed' : 'pointer',
-                    opacity: placing ? 0.7 : 1 }}>
-                  {placing ? 'Placing Order...' : 'Place Order 🎉'}
-                </button>
+              <div style={{ borderTop: '1px solid #f0eeff', paddingTop: 12,
+                marginBottom: 16 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between',
+                  marginBottom: 8, fontSize: 14, color: '#666' }}>
+                  <span>Subtotal ({itemCount} items)</span>
+                  <span>₹{total.toLocaleString('en-IN')}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between',
+                  marginBottom: 8, fontSize: 14, color: '#666' }}>
+                  <span>Delivery</span>
+                  <span style={{ color: '#1D9E75', fontWeight: 500 }}>FREE</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between',
+                  fontWeight: 700, fontSize: 16, marginTop: 8 }}>
+                  <span>Total</span>
+                  <span style={{ background: 'linear-gradient(135deg, #7F77DD, #D4537E)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent' }}>
+                    ₹{total.toLocaleString('en-IN')}
+                  </span>
+                </div>
               </div>
 
-              <p style={{ fontSize: 12, color: '#bbb', textAlign: 'center',
-                marginTop: 12 }}>
-                🔒 Secure checkout · Free returns
+              <button onClick={handlePayment} disabled={paying} style={{
+                width: '100%',
+                background: 'linear-gradient(135deg, #7F77DD, #D4537E)',
+                color: '#fff', border: 'none', padding: '14px',
+                borderRadius: 12, fontSize: 15, fontWeight: 600,
+                cursor: paying ? 'not-allowed' : 'pointer',
+                opacity: paying ? 0.7 : 1 }}>
+                {paying ? 'Opening Payment...' : '💳 Pay ₹' + total.toLocaleString('en-IN')}
+              </button>
+
+              <p style={{ fontSize: 11, color: '#bbb', textAlign: 'center',
+                marginTop: 10 }}>
+                🔒 Secured by Razorpay · UPI · Cards · NetBanking · Wallets
               </p>
             </div>
           </div>
