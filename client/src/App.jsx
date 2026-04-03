@@ -131,9 +131,8 @@ function Navbar() {
   return (
     <nav style={{ background: '#fff', boxShadow: '0 1px 0 #ede8ff',
       position: 'sticky', top: 0, zIndex: 200 }}>
-      <div style={{ display: 'flex', alignItems: 'center', height: 64,
-        padding: '0 12px', gap: 8, maxWidth: 1400, margin: '0 auto',
-        overflowX: 'hidden' }}>
+     <div style={{ display: 'flex', alignItems: 'center', height: 64,
+  padding: '0 12px', gap: 8, maxWidth: 1400, margin: '0 auto' }}>
 
         <Link to="/" style={{ display: 'flex', alignItems: 'center',
           gap: 8, flexShrink: 0 }}>
