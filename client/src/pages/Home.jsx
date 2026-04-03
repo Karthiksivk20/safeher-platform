@@ -47,7 +47,7 @@ export default function Home() {
     axios.get('https://safeher-backend-uyzs.onrender.com/api/products/categories/all').then(r => setCategories(r.data));
     axios.get('https://safeher-backend-uyzs.onrender.com/api/admin/stats').then(r => setStats(r.data));
     load(q, '');
-  }, [searchParams]);
+  }, []);
 
   const addToCart = async (product_id) => {
     if (!user) return showToast('Please login to add items to cart');
