@@ -33,7 +33,7 @@ export default function Home() {
       const params = {};
       if (s) params.search = s;
       if (c) params.category = c;
-      const { data } = await axios.get(https://safeher-backend-uyzs.onrender.com/api/products', { params });
+      const { data } = await axios.get('https://safeher-backend-uyzs.onrender.com/api/products', { params });
       setProducts(data);
     } finally {
       setLoading(false);
@@ -43,14 +43,14 @@ export default function Home() {
   useEffect(() => {
     const q = searchParams.get('search') || '';
     setSearch(q);
-    axios.get(https://safeher-backend-uyzs.onrender.com/api/products/categories/all').then(r => setCategories(r.data));
-    axios.get(https://safeher-backend-uyzs.onrender.com/api/admin/stats').then(r => setStats(r.data));
+    axios.get('https://safeher-backend-uyzs.onrender.com/api/products/categories/all').then(r => setCategories(r.data));
+    axios.get('https://safeher-backend-uyzs.onrender.com/api/admin/stats').then(r => setStats(r.data));
     load(q, '');
   }, [searchParams]);
 
   const addToCart = async (product_id) => {
     if (!user) return showToast('Please login to add items to cart');
-    await axios.post(https://safeher-backend-uyzs.onrender.com/api/cart/add',
+    await axios.post('https://safeher-backend-uyzs.onrender.com/api/cart/add',
       { product_id, quantity: 1 },
       { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
     );
