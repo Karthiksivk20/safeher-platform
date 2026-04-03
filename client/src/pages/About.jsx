@@ -5,7 +5,7 @@ function StatsGrid() {
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
-    axios.get(https://safeher-backend-uyzs.onrender.com/api/admin/stats')
+    axios.get('https://safeher-backend-uyzs.onrender.com/api/admin/stats')
       .then(r => setStats(r.data))
       .catch(() => {});
   }, []);

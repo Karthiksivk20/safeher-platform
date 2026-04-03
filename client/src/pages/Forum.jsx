@@ -18,7 +18,7 @@ export default function Forum() {
   const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 2500); };
   const token = () => ({ headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
 
-  const load = () => axios.get(https://safeher-backend-uyzs.onrender.com/api/forum')
+  const load = () => axios.get('https://safeher-backend-uyzs.onrender.com/api/forum')
     .then(r => setPosts(r.data));
 
   useEffect(() => { load(); }, []);
@@ -32,7 +32,7 @@ export default function Forum() {
 
   const submitPost = async (e) => {
     e.preventDefault();
-    await axios.post(https://safeher-backend-uyzs.onrender.com/api/forum', newPost, token());
+    await axios.post('https://safeher-backend-uyzs.onrender.com/api/forum', newPost, token());
     setNewPost({ title: '', content: '', category: 'general' });
     setShowForm(false);
     showToast('Post created!');
