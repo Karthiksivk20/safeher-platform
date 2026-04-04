@@ -8,21 +8,21 @@ const otpStore = {};
 const createTransporter = () => {
   const nodemailer = require('nodemailer');
   return nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
+    service: 'gmail',
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
-    tls: { rejectUnauthorized: false },
-    connectionTimeout: 15000,
-    socketTimeout: 15000,
   });
 };
 
 const sendOTPEmail = async (email, otp) => {
   const transporter = createTransporter();
+  
+  // Verify connection before sending
+  await transporter.verify();
+  console.log('Email transporter is ready');
+  
   const info = await transporter.sendMail({
     from: `"SafeHer 🌸" <${process.env.EMAIL_USER}>`,
     to: email,
@@ -44,7 +44,7 @@ const sendOTPEmail = async (email, otp) => {
       </div>
     `,
   });
-  console.log('Email sent:', info.messageId);
+  console.log('Email sent successfully:', info.messageId);
   return info;
 };
 
@@ -97,6 +97,7 @@ router.post('/register/send-otp', async (req, res) => {
   }
 });
 
+// Rest of your code remains exactly the same...
 router.post('/register', async (req, res) => {
   const { name, email, password, role, otp } = req.body;
   if (!name || !email || !password || !otp)
