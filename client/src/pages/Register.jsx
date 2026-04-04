@@ -13,6 +13,10 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+
+  // After requesting OTP, log it to console
+const response = await axios.post(`${API}/api/auth/register/send-otp`, { email });
+console.log('Check server console for OTP:', response.data);
   const sendOTP = async (e) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.password)
