@@ -175,4 +175,36 @@ router.post('/login', async (req, res) => {
   }
 });
 
+router.put('/update-profile', async (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).json({ message: 'Unauthorized' });
+  try {
+    const jwt = require('jsonwebtoken');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    await db.query('UPDATE users SET name = ? WHERE id = ?',
+      [req.body.name, decoded.id]);
+    res.json({ message: 'Profile updated' });
+  } catch {
+    res.status(500).json({ message: 'Update failed' });
+  }
+});
+
+router.put('/update-password', async (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).json({ message: 'Unauthorized' });
+  try {
+    const jwt = require('jsonwebtoken');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const [rows] = await db.query('SELECT * FROM users WHERE id = ?', [decoded.id]);
+    const valid = await bcrypt.compare(req.body.currentPassword, rows[0].password);
+    if (!valid) return res.status(400).json({ message: 'Current password is incorrect' });
+    const hashed = await bcrypt.hash(req.body.newPassword, 10);
+    await db.query('UPDATE users SET password = ? WHERE id = ?',
+      [hashed, decoded.id]);
+    res.json({ message: 'Password updated' });
+  } catch {
+    res.status(500).json({ message: 'Update failed' });
+  }
+});
+
 module.exports = router;

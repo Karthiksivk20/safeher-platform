@@ -17,8 +17,11 @@ import Support from './pages/Support';
 import About from './pages/About';
 import SellerOrders from './pages/SellerOrders';
 import ProductDetail from './pages/ProductDetail';
+import Profile from './pages/Profile';
+import SellerAnalytics from './pages/SellerAnalytics';
 
 const API = 'https://safeher-backend-uyzs.onrender.com';
+
 
 function Navbar() {
   const { user, logout } = useAuth();
@@ -264,6 +267,7 @@ function Navbar() {
                       display: 'inline-block', marginTop: 4 }}>{user.role}</span>
                   </div>
                   {[
+                    { icon: '👤', label: 'My Profile', to: '/profile' },
                     { icon: '📦', label: 'My Orders', to: '/orders' },
                     { icon: '❤️', label: 'Saved Items', to: '/saved' },
                     { icon: '💬', label: 'Support', to: '/support' },
@@ -362,6 +366,8 @@ export default function App() {
           <Route path="/support" element={<Support />} />
           <Route path="/about" element={<About />} />
           <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="/profile" element={<Profile />} />
+<Route path="/seller/analytics" element={<SellerAnalytics />} />
           <Route path="/saved" element={<ComingSoon title="Saved Items" icon="❤️" desc="Your wishlist is coming soon." />} />
           <Route path="/profile" element={<ComingSoon title="My Profile" icon="👤" desc="Your profile page is coming soon." />} />
         </Routes>

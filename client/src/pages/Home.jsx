@@ -25,30 +25,34 @@ export default function Home() {
   const [searchParams] = useSearchParams();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [priceRange, setPriceRange] = useState({ min: '', max: '' });
 
   const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 2500); };
 
-  const load = async (s, c) => {
+  const load = async (s, c, min, max) => {
     setLoading(true);
     try {
       const params = {};
       if (s) params.search = s;
       if (c) params.category = c;
+      if (min) params.min_price = min;
+      if (max) params.max_price = max;
       const { data } = await axios.get('https://safeher-backend-uyzs.onrender.com/api/products', { params });
       setProducts(data);
     } finally {
       setLoading(false);
     }
   };
+  
   useEffect(() => {
-  const q = searchParams.get('search') || '';
-  setSearch(q);
-  axios.get('https://safeher-backend-uyzs.onrender.com/api/products/categories/all')
-    .then(r => setCategories(r.data)).catch(() => {});
-  axios.get('https://safeher-backend-uyzs.onrender.com/api/admin/stats')
-    .then(r => setStats(r.data)).catch(() => {});
-  load(q, '');
-}, [searchParams]);
+    const q = searchParams.get('search') || '';
+    setSearch(q);
+    axios.get('https://safeher-backend-uyzs.onrender.com/api/products/categories/all')
+      .then(r => setCategories(r.data)).catch(() => {});
+    axios.get('https://safeher-backend-uyzs.onrender.com/api/admin/stats')
+      .then(r => setStats(r.data)).catch(() => {});
+    load(q, '', '', '');
+  }, [searchParams]);
 
   const addToCart = async (product_id) => {
     if (!user) return showToast('Please login to add items to cart');
@@ -59,7 +63,7 @@ export default function Home() {
     showToast('Added to cart! 🛒');
   };
 
-  const isFiltered = search || category;
+  const isFiltered = search || category || priceRange.min || priceRange.max;
 
   const categoryEmojis = ['🧵', '👗', '🌶️', '💍', '🏡', '💄'];
   const categoryColors = ['#f0eeff', '#fff0f6', '#fff8e6', '#eafaf3', '#e6f1fb', '#fef3e2'];
@@ -171,7 +175,7 @@ export default function Home() {
               gap: 'clamp(8px, 2vw, 12px)' }}>
               {categories.map((c, i) => (
                 <div key={c.id}
-                  onClick={() => { setCategory(String(c.id)); load('', c.id); }}
+                  onClick={() => { setCategory(String(c.id)); load('', c.id, priceRange.min, priceRange.max); }}
                   style={{ background: categoryColors[i % categoryColors.length],
                     borderRadius: 14, padding: 'clamp(12px, 2vw, 20px) 12px',
                     textAlign: 'center', cursor: 'pointer',
@@ -244,21 +248,32 @@ export default function Home() {
         <input placeholder="🔍  Search products..."
           style={{ flex: 1, minWidth: 150 }} value={search}
           onChange={e => setSearch(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && load(search, category)} />
+          onKeyDown={e => e.key === 'Enter' && load(search, category, priceRange.min, priceRange.max)} />
+        
         <select style={{ width: 'clamp(130px, 20vw, 180px)' }} value={category}
-          onChange={e => { setCategory(e.target.value); load(search, e.target.value); }}>
+          onChange={e => { setCategory(e.target.value); load(search, e.target.value, priceRange.min, priceRange.max); }}>
           <option value="">All Categories</option>
           {categories.map(c => (
             <option key={c.id} value={c.id}>{c.name}</option>
           ))}
         </select>
-        <button onClick={() => load(search, category)} style={{
+        
+        <input placeholder="Min ₹" type="number"
+          style={{ width: 80 }} value={priceRange.min}
+          onChange={e => setPriceRange({ ...priceRange, min: e.target.value })} />
+        
+        <input placeholder="Max ₹" type="number"
+          style={{ width: 80 }} value={priceRange.max}
+          onChange={e => setPriceRange({ ...priceRange, max: e.target.value })} />
+        
+        <button onClick={() => load(search, category, priceRange.min, priceRange.max)} style={{
           background: 'linear-gradient(135deg, #7F77DD, #D4537E)',
           color: '#fff', border: 'none', padding: '11px clamp(14px, 2vw, 24px)',
           borderRadius: 10, fontWeight: 600, fontSize: 14,
           cursor: 'pointer' }}>Search</button>
+        
         {isFiltered && (
-          <button onClick={() => { setSearch(''); setCategory(''); load('', ''); }}
+          <button onClick={() => { setSearch(''); setCategory(''); setPriceRange({ min: '', max: '' }); load('', '', '', ''); }}
             style={{ background: '#fff', border: '1.5px solid #ede8ff',
               color: '#888', padding: '10px 14px', borderRadius: 10,
               fontSize: 13, cursor: 'pointer' }}>
@@ -276,11 +291,12 @@ export default function Home() {
             {category
               ? `${categories.find(c => String(c.id) === String(category))?.name || 'Category'} (${products.length})`
               : search ? `Results for "${search}" (${products.length})`
+              : priceRange.min || priceRange.max ? `Price: ${priceRange.min || '0'} - ${priceRange.max || '∞'} (${products.length})`
               : `All Products (${products.length})`}
           </h2>
         </div>
         {isFiltered && (
-          <button onClick={() => { setSearch(''); setCategory(''); load('', ''); }}
+          <button onClick={() => { setSearch(''); setCategory(''); setPriceRange({ min: '', max: '' }); load('', '', '', ''); }}
             style={{ background: '#fff', border: '1.5px solid #ede8ff',
               color: '#7F77DD', padding: '8px 14px', borderRadius: 10,
               fontSize: 13, fontWeight: 500, cursor: 'pointer' }}>
@@ -291,42 +307,41 @@ export default function Home() {
 
       {/* Products Grid */}
       {loading ? (
-  <div>
-    <div style={{ textAlign: 'center', padding: '20px 0 28px',
-      background: '#fff8e6', borderRadius: 12, marginBottom: 20,
-      border: '1px solid #FAC775' }}>
-      <p style={{ fontSize: 14, color: '#BA7517', fontWeight: 500 }}>
-        ⏳ Server is waking up... Products will load in 20-30 seconds.
-      </p>
-      <p style={{ fontSize: 12, color: '#aaa', marginTop: 4 }}>
-        This only happens on the first visit. Subsequent loads are instant.
-      </p>
-    </div>
-    <div style={{ display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 20 }}>
-      {[1,2,3,4,5,6].map(i => (
-        <div key={i} style={{ background: '#fff', borderRadius: 16,
-          overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-          <div style={{ height: 180, background: 'linear-gradient(90deg, #f0eeff 25%, #e8e4ff 50%, #f0eeff 75%)',
-            backgroundSize: '200% 100%',
-            animation: 'shimmer 1.5s infinite' }} />
-          <div style={{ padding: 16 }}>
-            <div style={{ height: 14, background: '#f0eeff',
-              borderRadius: 6, marginBottom: 8, width: '70%' }} />
-            <div style={{ height: 12, background: '#f0eeff',
-              borderRadius: 6, width: '40%' }} />
+        <div>
+          <div style={{ textAlign: 'center', padding: '20px 0 28px',
+            background: '#fff8e6', borderRadius: 12, marginBottom: 20,
+            border: '1px solid #FAC775' }}>
+            <p style={{ fontSize: 14, color: '#BA7517', fontWeight: 500 }}>
+              ⏳ Server is waking up... Products will load in 20-30 seconds.
+            </p>
+            <p style={{ fontSize: 12, color: '#aaa', marginTop: 4 }}>
+              This only happens on the first visit. Subsequent loads are instant.
+            </p>
           </div>
+          <div style={{ display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 20 }}>
+            {[1,2,3,4,5,6].map(i => (
+              <div key={i} style={{ background: '#fff', borderRadius: 16,
+                overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+                <div style={{ height: 180, background: 'linear-gradient(90deg, #f0eeff 25%, #e8e4ff 50%, #f0eeff 75%)',
+                  backgroundSize: '200% 100%',
+                  animation: 'shimmer 1.5s infinite' }} />
+                <div style={{ padding: 16 }}>
+                  <div style={{ height: 14, background: '#f0eeff',
+                    borderRadius: 6, marginBottom: 8, width: '70%' }} />
+                  <div style={{ height: 12, background: '#f0eeff',
+                    borderRadius: 6, width: '40%' }} />
+                </div>
+              </div>
+            ))}
+          </div>
+          <style>{`
+            @keyframes shimmer {
+              0% { background-position: 200% 0; }
+              100% { background-position: -200% 0; }
+            }
+          `}</style>
         </div>
-      ))}
-    </div>
-    <style>{`
-      @keyframes shimmer {
-        0% { background-position: 200% 0; }
-        100% { background-position: -200% 0; }
-      }
-    `}</style>
-  </div>
-     
       ) : products.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '60px 0', color: '#aaa' }}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>🛍️</div>

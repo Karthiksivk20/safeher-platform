@@ -26,6 +26,8 @@ router.get('/', async (req, res) => {
   const params = [];
   if (category) { query += ' AND p.category_id = ?'; params.push(category); }
   if (search) { query += ' AND p.name LIKE ?'; params.push(`%${search}%`); }
+  if (req.query.min_price) { query += ' AND p.price >= ?'; params.push(req.query.min_price); }
+if (req.query.max_price) { query += ' AND p.price <= ?'; params.push(req.query.max_price); }
   query += ' ORDER BY p.created_at DESC';
   const [rows] = await db.query(query, params);
   res.json(rows);

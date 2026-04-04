@@ -15,6 +15,7 @@ export default function Cart() {
   });
   const [loading, setLoading] = useState(true);
   const [paying, setPaying] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState('online');
   const [toast, setToast] = useState('');
   const navigate = useNavigate();
 
@@ -105,6 +106,25 @@ export default function Cart() {
           }
         }
       };
+      const handleCOD = async () => {
+  const err = validateAddress();
+  if (err) return showToast(err);
+  setPaying(true);
+  try {
+    const fullAddress = `${address.name}, ${address.phone} | ${address.flat}, ${address.city}, ${address.state} - ${address.pincode}`;
+    await axios.post(
+      `${API}/api/orders/place`,
+      { address: fullAddress },
+      token()
+    );
+    showToast('COD Order placed successfully! 🎉');
+    setTimeout(() => navigate('/orders'), 1500);
+  } catch (err) {
+    showToast(err.response?.data?.message || 'Order failed');
+  } finally {
+    setPaying(false);
+  }
+};
 
       const rzp = new window.Razorpay(options);
       rzp.on('payment.failed', () => {
@@ -282,15 +302,59 @@ export default function Cart() {
                 </div>
               </div>
 
-              <button onClick={handlePayment} disabled={paying} style={{
-                width: '100%',
-                background: 'linear-gradient(135deg, #7F77DD, #D4537E)',
-                color: '#fff', border: 'none', padding: '14px',
-                borderRadius: 12, fontSize: 15, fontWeight: 600,
-                cursor: paying ? 'not-allowed' : 'pointer',
-                opacity: paying ? 0.7 : 1 }}>
-                {paying ? 'Opening Payment...' : '💳 Pay ₹' + total.toLocaleString('en-IN')}
-              </button>
+             {/* Payment Method Selection */}
+<div style={{ marginBottom: 16 }}>
+  <p style={{ fontSize: 13, fontWeight: 500, color: '#555',
+    marginBottom: 10 }}>Payment Method</p>
+  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+    <div onClick={() => setPaymentMethod('online')}
+      style={{ border: `2px solid ${paymentMethod === 'online' ? '#7F77DD' : '#ede8ff'}`,
+        borderRadius: 12, padding: '12px 14px', cursor: 'pointer',
+        background: paymentMethod === 'online' ? '#f0eeff' : '#fff',
+        textAlign: 'center', transition: 'all 0.2s' }}>
+      <div style={{ fontSize: 20, marginBottom: 4 }}>💳</div>
+      <div style={{ fontSize: 13, fontWeight: 600,
+        color: paymentMethod === 'online' ? '#7F77DD' : '#555' }}>
+        Pay Online
+      </div>
+      <div style={{ fontSize: 11, color: '#aaa' }}>UPI · Cards · NetBanking</div>
+    </div>
+    <div onClick={() => setPaymentMethod('cod')}
+      style={{ border: `2px solid ${paymentMethod === 'cod' ? '#1D9E75' : '#ede8ff'}`,
+        borderRadius: 12, padding: '12px 14px', cursor: 'pointer',
+        background: paymentMethod === 'cod' ? '#eafaf3' : '#fff',
+        textAlign: 'center', transition: 'all 0.2s' }}>
+      <div style={{ fontSize: 20, marginBottom: 4 }}>💵</div>
+      <div style={{ fontSize: 13, fontWeight: 600,
+        color: paymentMethod === 'cod' ? '#1D9E75' : '#555' }}>
+        Cash on Delivery
+      </div>
+      <div style={{ fontSize: 11, color: '#aaa' }}>Pay when delivered</div>
+    </div>
+  </div>
+</div>
+
+<button onClick={paymentMethod === 'online' ? handlePayment : handleCOD}
+  disabled={paying}
+  style={{ width: '100%',
+    background: paymentMethod === 'cod'
+      ? 'linear-gradient(135deg, #1D9E75, #0F6E56)'
+      : 'linear-gradient(135deg, #7F77DD, #D4537E)',
+    color: '#fff', border: 'none', padding: '14px',
+    borderRadius: 12, fontSize: 15, fontWeight: 600,
+    cursor: paying ? 'not-allowed' : 'pointer',
+    opacity: paying ? 0.7 : 1 }}>
+  {paying ? 'Placing Order...'
+    : paymentMethod === 'cod'
+    ? '🚚 Place COD Order — ₹' + total.toLocaleString('en-IN')
+    : '💳 Pay ₹' + total.toLocaleString('en-IN')}
+</button>
+
+<p style={{ fontSize: 11, color: '#bbb', textAlign: 'center', marginTop: 10 }}>
+  {paymentMethod === 'online'
+    ? '🔒 Secured by Razorpay · UPI · Cards · NetBanking · Wallets'
+    : '🚚 Pay cash when your order is delivered'}
+</p>
 
               <p style={{ fontSize: 11, color: '#bbb', textAlign: 'center',
                 marginTop: 10 }}>
