@@ -16,23 +16,28 @@ export default function Register() {
   // ❌ DELETE LINES 13-15 - they don't belong here
   // const response = await axios.post(`${API}/api/auth/register/send-otp`, { email });
   // console.log('Check server console for OTP:', response.data);
-
   const sendOTP = async (e) => {
-    e.preventDefault();
-    if (!form.name || !form.email || !form.password)
-      return setError('Please fill in all fields');
-    setLoading(true);
-    setError('');
-    try {
-      await axios.post(`${API}/api/auth/register/send-otp`, { email: form.email });
-      setMsg(`OTP sent to ${form.email}. Check your inbox and spam folder.`);
-      setStep(2);
-    } catch (err) {
-      setError(err.response?.data?.message || 'Could not send OTP');
-    } finally {
-      setLoading(false);
+  e.preventDefault();
+  if (!form.name || !form.email || !form.password)
+    return setError('Please fill in all fields');
+  setLoading(true);
+  setError('');
+  try {
+    const response = await axios.post(`${API}/api/auth/register/send-otp`, { email: form.email });
+    // THIS WILL SHOW THE OTP IN YOUR BROWSER CONSOLE
+    console.log('🔐 YOUR OTP IS:', response.data.otp || response.data);
+    // Also show an alert with the OTP (temporary)
+    if (response.data.otp) {
+      alert(`Your OTP is: ${response.data.otp}`);
     }
-  };
+    setMsg(`OTP sent to ${form.email}. Check console for OTP.`);
+    setStep(2);
+  } catch (err) {
+    setError(err.response?.data?.message || 'Could not send OTP');
+  } finally {
+    setLoading(false);
+  }
+};
 
   const verifyAndRegister = async (e) => {
     e.preventDefault();
