@@ -13,6 +13,10 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // ❌ DELETE LINES 13-15 - they don't belong here
+  // const response = await axios.post(`${API}/api/auth/register/send-otp`, { email });
+  // console.log('Check server console for OTP:', response.data);
+
   const sendOTP = async (e) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.password)
@@ -20,8 +24,7 @@ export default function Register() {
     setLoading(true);
     setError('');
     try {
-      const response = await axios.post(`${API}/api/auth/register/send-otp`, { email: form.email });
-      console.log('Check server console for OTP:', response.data);
+      await axios.post(`${API}/api/auth/register/send-otp`, { email: form.email });
       setMsg(`OTP sent to ${form.email}. Check your inbox and spam folder.`);
       setStep(2);
     } catch (err) {
