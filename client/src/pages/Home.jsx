@@ -369,16 +369,23 @@ export default function Home() {
                 justifyContent: 'center', overflow: 'hidden',
                 position: 'relative' }}>
                 {imgSrc(p.image)
-                  ? <img
-  src={imgSrc(p.image)}
-  alt={p.name}
-  style={{
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-    display: 'block'
-  }}
-/>
+                  ? <div style={{
+  width: '100%',
+  height: '220px',
+  overflow: 'hidden',
+  borderTopLeftRadius: '12px',
+  borderTopRightRadius: '12px'
+}}>
+  <img
+    src={imgSrc(p.image)}
+    alt={p.name}
+    style={{
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover'
+    }}
+  />
+</div>
                   : <span style={{ fontSize: 48 }}>🛍️</span>}
                 <span style={{ position: 'absolute', top: 10, left: 10,
                   background: 'rgba(255,255,255,0.92)', color: '#7F77DD',
