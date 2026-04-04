@@ -8,21 +8,21 @@ const otpStore = {};
 const createTransporter = () => {
   const nodemailer = require('nodemailer');
   return nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
+    tls: { rejectUnauthorized: false },
+    connectionTimeout: 15000,
+    socketTimeout: 15000,
   });
 };
 
 const sendOTPEmail = async (email, otp) => {
   const transporter = createTransporter();
-  
-  // Verify connection before sending
-  await transporter.verify();
-  console.log('Email transporter is ready');
-  
   const info = await transporter.sendMail({
     from: `"SafeHer 🌸" <${process.env.EMAIL_USER}>`,
     to: email,
@@ -44,7 +44,7 @@ const sendOTPEmail = async (email, otp) => {
       </div>
     `,
   });
-  console.log('Email sent successfully:', info.messageId);
+  console.log('Email sent:', info.messageId);
   return info;
 };
 
@@ -81,23 +81,20 @@ router.post('/register/send-otp', async (req, res) => {
     otpStore[emailLower] = { otp, expires: Date.now() + 10 * 60 * 1000 };
     console.log(`[OTP] ${emailLower}: ${otp}`);
 
-    // Wait for email to actually send before responding
-    await sendOTPEmail(email, otp);
-    
     res.json({ message: `OTP sent to ${email}. Check inbox and spam folder.` });
 
-  } catch (err) {
-    console.error('[OTP] Email error:', err.message);
-    // Clean up the stored OTP since email failed
-    delete otpStore[emailLower];
-    res.status(500).json({ 
-      message: 'Failed to send OTP email. Please check your email address and try again.',
-      error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    sendOTPEmail(email, otp).then(() => {
+      console.log(`[OTP] Email delivered to ${emailLower}`);
+    }).catch(err => {
+      console.error(`[OTP] Email failed for ${emailLower}:`, err.message);
     });
+
+  } catch (err) {
+    console.error('[OTP] Server error:', err);
+    res.status(500).json({ message: 'Server error. Please try again.' });
   }
 });
 
-// Rest of your code remains exactly the same...
 router.post('/register', async (req, res) => {
   const { name, email, password, role, otp } = req.body;
   if (!name || !email || !password || !otp)
