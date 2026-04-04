@@ -5,9 +5,9 @@ const db = require('../config/db');
 
 const otpStore = {};
 
-const sendOTPEmail = async (email, otp) => {
+const createTransporter = () => {
   const nodemailer = require('nodemailer');
-  const transporter = nodemailer.createTransport({
+  return nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 587,
     secure: false,
@@ -16,99 +16,114 @@ const sendOTPEmail = async (email, otp) => {
       pass: process.env.EMAIL_PASS,
     },
     tls: { rejectUnauthorized: false },
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
+    connectionTimeout: 15000,
+    socketTimeout: 15000,
   });
+};
 
-  await transporter.sendMail({
+const sendOTPEmail = async (email, otp) => {
+  const transporter = createTransporter();
+  const info = await transporter.sendMail({
     from: `"SafeHer 🌸" <${process.env.EMAIL_USER}>`,
     to: email,
-    subject: 'Your SafeHer Verification Code',
+    subject: `${otp} is your SafeHer verification code`,
     html: `
-      <div style="font-family:sans-serif;max-width:480px;margin:0 auto;background:#1a0d2e;border-radius:16px;overflow:hidden;">
-        <div style="background:linear-gradient(135deg,#6B4FA0,#C4587A);padding:28px;text-align:center;">
-          <h1 style="color:#fff;margin:0;font-size:24px;">🌸 SafeHer</h1>
-          <p style="color:rgba(255,255,255,0.8);margin:8px 0 0;font-size:13px;">Women Entrepreneurship Platform</p>
+      <div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;">
+        <div style="background:linear-gradient(135deg,#6B4FA0,#C4587A);padding:28px;text-align:center;border-radius:12px 12px 0 0;">
+          <h1 style="color:#fff;margin:0;font-size:22px;">🌸 SafeHer</h1>
+          <p style="color:rgba(255,255,255,0.85);margin:6px 0 0;font-size:13px;">Women Entrepreneurship Platform</p>
         </div>
-        <div style="padding:32px;text-align:center;">
-          <p style="color:#E8E0F0;font-size:15px;margin-bottom:8px;">Your verification code is:</p>
-          <div style="background:rgba(107,79,160,0.2);border:2px solid rgba(107,79,160,0.4);border-radius:14px;padding:20px;margin:16px 0;">
-            <span style="font-size:44px;font-weight:800;color:#D4A853;letter-spacing:12px;">${otp}</span>
+        <div style="background:#fff;padding:32px;text-align:center;border:1px solid #eee;border-radius:0 0 12px 12px;">
+          <p style="color:#333;font-size:16px;margin-bottom:8px;">Your verification code is:</p>
+          <div style="background:#f0eeff;border:2px solid #8B6FBF;border-radius:12px;padding:20px;margin:16px auto;display:inline-block;">
+            <span style="font-size:42px;font-weight:800;color:#6B4FA0;letter-spacing:10px;">${otp}</span>
           </div>
-          <p style="color:rgba(255,255,255,0.4);font-size:13px;">Expires in 10 minutes · Do not share this code</p>
+          <p style="color:#888;font-size:13px;margin-top:16px;">This code expires in <strong>10 minutes</strong>.</p>
+          <p style="color:#aaa;font-size:12px;margin-top:8px;">If you didn't request this, ignore this email.</p>
         </div>
       </div>
     `,
   });
+  console.log('Email sent:', info.messageId);
+  return info;
 };
 
 router.get('/test-email', async (req, res) => {
+  console.log('Test email requested');
+  console.log('EMAIL_USER:', process.env.EMAIL_USER);
+  console.log('EMAIL_PASS length:', process.env.EMAIL_PASS?.length);
   try {
     await sendOTPEmail(process.env.EMAIL_USER, '123456');
-    res.json({ message: 'Test email sent to ' + process.env.EMAIL_USER });
+    res.json({ message: 'Test email sent successfully to ' + process.env.EMAIL_USER });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Email error:', err.message);
+    res.status(500).json({
+      error: err.message,
+      emailUser: process.env.EMAIL_USER,
+      hasPassword: !!process.env.EMAIL_PASS,
+    });
   }
 });
 
 router.post('/register/send-otp', async (req, res) => {
   const { email } = req.body;
-  if (!email)
-    return res.status(400).json({ message: 'Email is required' });
+  if (!email) return res.status(400).json({ message: 'Email is required' });
+
+  const emailLower = email.trim().toLowerCase();
 
   try {
     const [existing] = await db.query(
-      'SELECT id FROM users WHERE email = ?',
-      [email.trim().toLowerCase()]
-    );
+      'SELECT id FROM users WHERE email = ?', [emailLower]);
     if (existing.length)
-      return res.status(400).json({ message: 'Email already registered' });
+      return res.status(400).json({ message: 'This email is already registered' });
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    otpStore[email.toLowerCase()] = {
-      otp, expires: Date.now() + 10 * 60 * 1000
-    };
+    otpStore[emailLower] = { otp, expires: Date.now() + 10 * 60 * 1000 };
+    console.log(`[OTP] ${emailLower}: ${otp}`);
 
-    console.log(`OTP for ${email}: ${otp}`);
+    res.json({ message: `OTP sent to ${email}. Check inbox and spam folder.` });
 
-    sendOTPEmail(email, otp).catch(err => {
-      console.error('Email send error:', err.message);
+    sendOTPEmail(email, otp).then(() => {
+      console.log(`[OTP] Email delivered to ${emailLower}`);
+    }).catch(err => {
+      console.error(`[OTP] Email failed for ${emailLower}:`, err.message);
     });
 
-    res.json({ message: `OTP sent to ${email}. Check inbox and spam.` });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error. Try again.' });
+    console.error('[OTP] Server error:', err);
+    res.status(500).json({ message: 'Server error. Please try again.' });
   }
 });
 
 router.post('/register', async (req, res) => {
   const { name, email, password, role, otp } = req.body;
   if (!name || !email || !password || !otp)
-    return res.status(400).json({ message: 'All fields required' });
+    return res.status(400).json({ message: 'All fields are required' });
+
+  const emailLower = email.trim().toLowerCase();
 
   try {
-    const key = email.toLowerCase();
-    const stored = otpStore[key];
+    const stored = otpStore[emailLower];
     if (!stored)
-      return res.status(400).json({ message: 'OTP expired or not found. Request a new one.' });
+      return res.status(400).json({ message: 'OTP not found. Please request a new OTP.' });
     if (Date.now() > stored.expires) {
-      delete otpStore[key];
-      return res.status(400).json({ message: 'OTP expired. Request a new one.' });
+      delete otpStore[emailLower];
+      return res.status(400).json({ message: 'OTP expired. Please request a new OTP.' });
     }
     if (stored.otp !== String(otp).trim())
-      return res.status(400).json({ message: 'Incorrect OTP. Try again.' });
+      return res.status(400).json({ message: 'Wrong OTP. Please check and try again.' });
 
-    delete otpStore[key];
+    delete otpStore[emailLower];
     const hashed = await bcrypt.hash(password, 10);
     await db.query(
       'INSERT INTO users (name, email, password, role) VALUES (?,?,?,?)',
-      [name, key, hashed, role || 'buyer']
+      [name, emailLower, hashed, role || 'buyer']
     );
-    res.status(201).json({ message: 'Account created! Please login.' });
+    res.status(201).json({ message: 'Account created successfully! Please login.' });
   } catch (err) {
     if (err.code === 'ER_DUP_ENTRY')
       return res.status(400).json({ message: 'Email already registered' });
+    console.error('[Register] Error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -140,8 +155,8 @@ router.post('/login', async (req, res) => {
       },
     });
   } catch (err) {
-    console.error('Login error:', err);
-    res.status(500).json({ message: 'Server error. Try again.' });
+    console.error('[Login] Error:', err);
+    res.status(500).json({ message: 'Server error. Please try again.' });
   }
 });
 
@@ -170,7 +185,7 @@ router.put('/update-password', async (req, res) => {
     const hashed = await bcrypt.hash(req.body.newPassword, 10);
     await db.query('UPDATE users SET password = ? WHERE id = ?',
       [hashed, decoded.id]);
-    res.json({ message: 'Password updated' });
+    res.json({ message: 'Password updated successfully' });
   } catch {
     res.status(500).json({ message: 'Update failed' });
   }
