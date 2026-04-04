@@ -81,17 +81,19 @@ router.post('/register/send-otp', async (req, res) => {
     otpStore[emailLower] = { otp, expires: Date.now() + 10 * 60 * 1000 };
     console.log(`[OTP] ${emailLower}: ${otp}`);
 
+    // Wait for email to actually send before responding
+    await sendOTPEmail(email, otp);
+    
     res.json({ message: `OTP sent to ${email}. Check inbox and spam folder.` });
 
-    sendOTPEmail(email, otp).then(() => {
-      console.log(`[OTP] Email delivered to ${emailLower}`);
-    }).catch(err => {
-      console.error(`[OTP] Email failed for ${emailLower}:`, err.message);
-    });
-
   } catch (err) {
-    console.error('[OTP] Server error:', err);
-    res.status(500).json({ message: 'Server error. Please try again.' });
+    console.error('[OTP] Email error:', err.message);
+    // Clean up the stored OTP since email failed
+    delete otpStore[emailLower];
+    res.status(500).json({ 
+      message: 'Failed to send OTP email. Please check your email address and try again.',
+      error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
   }
 });
 
