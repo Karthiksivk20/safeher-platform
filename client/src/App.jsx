@@ -462,28 +462,6 @@ function Navbar() {
           </div>
         </div>
       </nav>
-
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/marketplace" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/orders" element={<Orders />} />
-        <Route path="/seller" element={<SellerDashboard />} />
-        <Route path="/seller/orders" element={<SellerOrders />} />
-        <Route path="/seller/analytics" element={<SellerAnalytics />} />
-        <Route path="/forum" element={<Forum />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/stories" element={<Stories />} />
-        <Route path="/funding" element={<Funding />} />
-        <Route path="/learn" element={<Learn />} />
-        <Route path="/support" element={<Support />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/product/:id" element={<ProductDetail />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/saved" element={<ComingSoon title="Saved Items" icon="❤️" />} />
-      </Routes>
     </>
   );
 }
@@ -516,6 +494,27 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/marketplace" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/seller" element={<SellerDashboard />} />
+          <Route path="/seller/orders" element={<SellerOrders />} />
+          <Route path="/seller/analytics" element={<SellerAnalytics />} />
+          <Route path="/forum" element={<Forum />} />
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/stories" element={<Stories />} />
+          <Route path="/funding" element={<Funding />} />
+          <Route path="/learn" element={<Learn />} />
+          <Route path="/support" element={<Support />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/saved" element={<ComingSoon title="Saved Items" icon="❤️" />} />
+        </Routes>
       </BrowserRouter>
     </AuthProvider>
   );
