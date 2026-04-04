@@ -105,10 +105,10 @@ export default function Cart() {
             showToast('Payment cancelled');
           }
         }
-      };
-      const handleCOD = async () => {
+      };const handleCOD = async () => {
   const err = validateAddress();
   if (err) return showToast(err);
+  if (!window.confirm(`Place Cash on Delivery order for ₹${total.toLocaleString('en-IN')}?`)) return;
   setPaying(true);
   try {
     const fullAddress = `${address.name}, ${address.phone} | ${address.flat}, ${address.city}, ${address.state} - ${address.pincode}`;
@@ -117,11 +117,11 @@ export default function Cart() {
       { address: fullAddress },
       token()
     );
-    showToast('COD Order placed successfully! 🎉');
-    setTimeout(() => navigate('/orders'), 1500);
+    showToast('COD Order placed! 🎉');
+    setCart([]);
+    setTimeout(() => navigate('/orders'), 2000);
   } catch (err) {
-    showToast(err.response?.data?.message || 'Order failed');
-  } finally {
+    showToast(err.response?.data?.message || 'Order failed. Please try again.');
     setPaying(false);
   }
 };
