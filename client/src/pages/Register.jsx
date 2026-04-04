@@ -13,10 +13,6 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-
-  // After requesting OTP, log it to console
-const response = await axios.post(`${API}/api/auth/register/send-otp`, { email });
-console.log('Check server console for OTP:', response.data);
   const sendOTP = async (e) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.password)
@@ -24,7 +20,8 @@ console.log('Check server console for OTP:', response.data);
     setLoading(true);
     setError('');
     try {
-      await axios.post(`${API}/api/auth/register/send-otp`, { email: form.email });
+      const response = await axios.post(`${API}/api/auth/register/send-otp`, { email: form.email });
+      console.log('Check server console for OTP:', response.data);
       setMsg(`OTP sent to ${form.email}. Check your inbox and spam folder.`);
       setStep(2);
     } catch (err) {
