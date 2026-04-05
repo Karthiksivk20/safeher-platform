@@ -24,7 +24,7 @@ const createTransporter = () => {
 const sendOTPEmail = async (email, otp) => {
   const transporter = createTransporter();
   const info = await transporter.sendMail({
-    from: `"SafeHer 🌸" <smkarthik1910@gmail.com>`,
+    from: `"SafeHer 🌸" <${process.env.EMAIL_USER}>`,
     to: email,
     subject: `${otp} is your SafeHer verification code`,
     html: `
