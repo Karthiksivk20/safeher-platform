@@ -22,7 +22,7 @@ function StatsGrid() {
     { icon: '📦', value: stats.orders, label: 'Orders Placed' },
     { icon: '💰', value: '₹' + Number(stats.revenue).toLocaleString('en-IN'), label: 'Revenue Generated' },
     { icon: '💬', value: stats.forum_posts, label: 'Forum Posts' },
-    { icon: '🗺️', value: stats.incidents, label: 'Safety Reports' },
+   // { icon: '🗺️', value: stats.incidents, label: 'Safety Reports' },
   ];
 
   return (
