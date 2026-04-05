@@ -5,64 +5,58 @@ const db = require('../config/db');
 
 const otpStore = {};
 
-// ================= EMAIL SETUP (BREVO SMTP) =================
-const createTransporter = () => {
-  const nodemailer = require('nodemailer');
-  return nodemailer.createTransport({
-    host: 'smtp-relay.brevo.com',
-    port: 465,        // ✅ CHANGED from 587 to 465
-    secure: true,     // ✅ CHANGED from false to true
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-    tls: { rejectUnauthorized: false },
-    connectionTimeout: 15000,
-    socketTimeout: 15000,
-  });
-};
-
+// ================= EMAIL SETUP (BREVO HTTP API) =================
 const sendOTPEmail = async (email, otp) => {
-  const transporter = createTransporter();
-  const info = await transporter.sendMail({
-    from: `"SafeHer 🌸" <${process.env.EMAIL_USER}>`,
-    to: email,
-    subject: `${otp} is your SafeHer verification code`,
-    html: `
-      <div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;">
-        <div style="background:linear-gradient(135deg,#6B4FA0,#C4587A);padding:28px;text-align:center;border-radius:12px 12px 0 0;">
-          <h1 style="color:#fff;margin:0;font-size:22px;">🌸 SafeHer</h1>
-          <p style="color:rgba(255,255,255,0.85);margin:6px 0 0;font-size:13px;">Women Entrepreneurship Platform</p>
-        </div>
-        <div style="background:#fff;padding:32px;text-align:center;border:1px solid #eee;border-radius:0 0 12px 12px;">
-          <p style="color:#333;font-size:16px;margin-bottom:8px;">Your verification code is:</p>
-          <div style="background:#f0eeff;border:2px solid #8B6FBF;border-radius:12px;padding:20px;margin:16px auto;display:inline-block;">
-            <span style="font-size:42px;font-weight:800;color:#6B4FA0;letter-spacing:10px;">${otp}</span>
+  const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'api-key': process.env.BREVO_API_KEY,
+    },
+    body: JSON.stringify({
+      sender: { name: 'SafeHer 🌸', email: 'smkarthik191025@gmail.com' },
+      to: [{ email: email }],
+      subject: `${otp} is your SafeHer verification code`,
+      htmlContent: `
+        <div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;">
+          <div style="background:linear-gradient(135deg,#6B4FA0,#C4587A);padding:28px;text-align:center;border-radius:12px 12px 0 0;">
+            <h1 style="color:#fff;margin:0;font-size:22px;">🌸 SafeHer</h1>
+            <p style="color:rgba(255,255,255,0.85);margin:6px 0 0;font-size:13px;">Women Entrepreneurship Platform</p>
           </div>
-          <p style="color:#888;font-size:13px;margin-top:16px;">This code expires in <strong>10 minutes</strong>.</p>
-          <p style="color:#aaa;font-size:12px;margin-top:8px;">If you didn't request this, ignore this email.</p>
+          <div style="background:#fff;padding:32px;text-align:center;border:1px solid #eee;border-radius:0 0 12px 12px;">
+            <p style="color:#333;font-size:16px;margin-bottom:8px;">Your verification code is:</p>
+            <div style="background:#f0eeff;border:2px solid #8B6FBF;border-radius:12px;padding:20px;margin:16px auto;display:inline-block;">
+              <span style="font-size:42px;font-weight:800;color:#6B4FA0;letter-spacing:10px;">${otp}</span>
+            </div>
+            <p style="color:#888;font-size:13px;margin-top:16px;">This code expires in <strong>10 minutes</strong>.</p>
+            <p style="color:#aaa;font-size:12px;margin-top:8px;">If you didn't request this, ignore this email.</p>
+          </div>
         </div>
-      </div>
-    `,
+      `,
+    }),
   });
-  console.log('✅ Email sent:', info.messageId);
-  return info;
+
+  const data = await response.json();
+  if (!response.ok) {
+    console.error('❌ Brevo API error:', data);
+    throw new Error(data.message || 'Failed to send email');
+  }
+  console.log('✅ Email sent via Brevo API:', data.messageId);
+  return data;
 };
 
 // ================= TEST ROUTE =================
 router.get('/test-email', async (req, res) => {
   console.log('Test email requested');
-  console.log('EMAIL_USER:', process.env.EMAIL_USER);
-  console.log('EMAIL_PASS length:', process.env.EMAIL_PASS?.length);
+  console.log('BREVO_API_KEY length:', process.env.BREVO_API_KEY?.length);
   try {
-    await sendOTPEmail(process.env.EMAIL_USER, '123456');
-    res.json({ message: 'Test email sent successfully to ' + process.env.EMAIL_USER });
+    await sendOTPEmail('smkarthik191025@gmail.com', '123456');
+    res.json({ message: 'Test email sent successfully to smkarthik191025@gmail.com' });
   } catch (err) {
     console.error('❌ Email error:', err.message);
     res.status(500).json({
       error: err.message,
-      emailUser: process.env.EMAIL_USER,
-      hasPassword: !!process.env.EMAIL_PASS,
+      hasApiKey: !!process.env.BREVO_API_KEY,
     });
   }
 });
@@ -84,15 +78,13 @@ router.post('/register/send-otp', async (req, res) => {
     otpStore[emailLower] = { otp, expires: Date.now() + 10 * 60 * 1000 };
     console.log(`[OTP] ${emailLower}: ${otp}`);
 
-    // ✅ FIXED: await the email — send BEFORE responding
-    // so errors are caught and returned to the client
     try {
       await sendOTPEmail(emailLower, otp);
       console.log(`[OTP] Email delivered to ${emailLower}`);
       res.json({ message: `OTP sent to ${email}. Check inbox and spam folder.` });
     } catch (emailErr) {
       console.error(`[OTP] Email failed for ${emailLower}:`, emailErr.message);
-      delete otpStore[emailLower]; // clean up if email failed
+      delete otpStore[emailLower];
       res.status(500).json({ message: 'Failed to send OTP email. Please try again.' });
     }
 
