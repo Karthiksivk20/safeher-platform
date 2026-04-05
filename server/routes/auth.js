@@ -9,12 +9,12 @@ const otpStore = {};
 const createTransporter = () => {
   const nodemailer = require('nodemailer');
   return nodemailer.createTransport({
-    host: 'smtp-relay.brevo.com',   // ✅ FIXED: was smtp.gmail.com
-    port: 587,
-    secure: false,
+    host: 'smtp-relay.brevo.com',
+    port: 465,        // ✅ CHANGED from 587 to 465
+    secure: true,     // ✅ CHANGED from false to true
     auth: {
-      user: process.env.EMAIL_USER, // a729c0001@smtp-brevo.com
-      pass: process.env.EMAIL_PASS, // your Brevo SMTP key
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
     },
     tls: { rejectUnauthorized: false },
     connectionTimeout: 15000,
