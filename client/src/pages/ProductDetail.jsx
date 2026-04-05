@@ -1,31 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate }from 'react-router-dom';import API from '../api';
 import axios from 'axios';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const imgSrc = (image) =>
-  image?.startsWith('http') ? image : image
-    ? `${API}/uploads/${image}` : null;
+const API = 'https://safeher-backend-uyzs.onrender.com';
 
-function StarRating({ value, onChange, readonly = false }) {
-  const [hovered, setHovered] = useState(0);
-  return (
-    <div style={{ display: 'flex', gap: 4 }}>
-      {[1, 2, 3, 4, 5].map(star => (
-        <span key={star}
-          onClick={() => !readonly && onChange && onChange(star)}
-          onMouseEnter={() => !readonly && setHovered(star)}
-          onMouseLeave={() => !readonly && setHovered(0)}
-          style={{
-            fontSize: readonly ? 16 : 28,
-            cursor: readonly ? 'default' : 'pointer',
-            color: star <= (hovered || value) ? '#F0C419' : '#e0e0e0',
-            transition: 'color 0.15s',
-          }}>★</span>
-      ))}
-    </div>
-  );
-}
+const imgSrc = (image) =>
+  image?.startsWith('http') ? image : image ? `${API}/uploads/${image}` : null;
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -33,340 +14,374 @@ export default function ProductDetail() {
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [reviews, setReviews] = useState([]);
-  const [avgRating, setAvgRating] = useState(0);
-  const [totalReviews, setTotalReviews] = useState(0);
-  const [toast, setToast] = useState('');
   const [loading, setLoading] = useState(true);
-  const [orderLoading, setOrderLoading] = useState(false);
-  const [address, setAddress] = useState({
-  name: '', phone: '', flat: '', city: '', state: '', pincode: ''
-});
-  const [showOrderForm, setShowOrderForm] = useState(false);
-  const [quantity, setQuantity] = useState(1);
+  const [qty, setQty] = useState(1);
+  const [toast, setToast] = useState({ msg: '', type: '' });
+  const [imgLoaded, setImgLoaded] = useState(false);
 
-  const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 2500); };
-  const token = () => ({
+  const showToast = (msg, type = 'success') => {
+    setToast({ msg, type });
+    setTimeout(() => setToast({ msg: '', type: '' }), 3000);
+  };
+
+  const headers = () => ({
     headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
   });
 
-  const loadProduct = async () => {
-    const { data } = await axios.get(`${API}/api/products/${id}`);
-    setProduct(data);
-  };
-
-  const loadReviews = async () => {
-    const { data } = await axios.get(`${API}/api/products/${id}/reviews`);
-    setReviews(data.reviews);
-    setAvgRating(data.avg);
-    setTotalReviews(data.total);
-  };
-
   useEffect(() => {
-    Promise.all([loadProduct(), loadReviews()]).finally(() => setLoading(false));
+    setLoading(true);
+    Promise.all([
+      axios.get(`${API}/api/products/${id}`),
+      axios.get(`${API}/api/products/${id}/reviews`),
+    ]).then(([p, r]) => {
+      setProduct(p.data);
+      setReviews(r.data);
+    }).catch(() => navigate('/')).finally(() => setLoading(false));
   }, [id]);
 
   const addToCart = async () => {
-    if (!user) return showToast('Please login to add to cart');
-    await axios.post('https://safeher-backend-uyzs.onrender.com/api/cart/add',
-      { product_id: id, quantity }, token());
-    showToast('Added to cart! 🛒');
+    if (!user) return showToast('Please sign in first', 'error');
+    try {
+      await axios.post(`${API}/api/cart/add`,
+        { product_id: id, quantity: qty }, headers());
+      showToast(`${qty} item${qty > 1 ? 's' : ''} added to cart! 🛒`);
+    } catch { showToast('Could not add to cart', 'error'); }
   };
 
   const orderNow = async () => {
-    if (!user) return showToast('Please login to order');
-    if (!address.name || !address.phone || !address.flat ||
-    !address.city || !address.state || !address.pincode)
-  return showToast('Please fill in all delivery details');
-    setOrderLoading(true);
-    try {
-      await axios.post('https://safeher-backend-uyzs.onrender.com/api/cart/add',
-        { product_id: id, quantity }, token());
-      const fullAddress = `${address.name}, ${address.phone} | ${address.flat}, ${address.city}, ${address.state} - ${address.pincode}`;
-await axios.post('https://safeher-backend-uyzs.onrender.com/api/orders/place',
-  { address: fullAddress }, token());
-      showToast('Order placed successfully! 🎉');
-      setTimeout(() => navigate('/orders'), 1500);
-    } catch {
-      showToast('Something went wrong');
-    } finally {
-      setOrderLoading(false);
-    }
+    if (!user) return navigate('/login');
+    await addToCart();
+    setTimeout(() => navigate('/cart'), 500);
   };
 
   if (loading) return (
-    <div style={{ maxWidth: 1100, margin: '60px auto', padding: '0 24px',
-      textAlign: 'center', color: '#aaa' }}>
-      <div style={{ fontSize: 40 }}>🛍️</div>
-      <p style={{ marginTop: 12 }}>Loading product...</p>
+    <div style={{ minHeight: '80vh', display: 'flex', alignItems: 'center',
+      justifyContent: 'center', flexDirection: 'column', gap: 16,
+      background: 'var(--grad-bg)' }}>
+      <div style={{ width: 48, height: 48, border: '3px solid var(--border)',
+        borderTopColor: 'var(--primary)', borderRadius: '50%',
+        animation: 'spin 0.7s linear infinite' }} />
+      <p style={{ color: 'var(--text-muted)', fontSize: 14 }}>Loading product...</p>
     </div>
   );
 
-  if (!product) return (
-    <div style={{ maxWidth: 1100, margin: '60px auto', padding: '0 24px',
-      textAlign: 'center', color: '#aaa' }}>
-      <div style={{ fontSize: 40 }}>😕</div>
-      <p style={{ marginTop: 12 }}>Product not found.</p>
-    </div>
-  );
+  if (!product) return null;
+
+  const avgRating = reviews.length
+    ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)
+    : null;
 
   return (
-    <div style={{ maxWidth: 1100, margin: '32px auto', padding: '0 24px 60px' }}>
-
-      {toast && (
-        <div style={{ position: 'fixed', top: 80, right: 24, background: '#1a1a2e',
-          color: '#fff', padding: '12px 20px', borderRadius: 10, fontSize: 14,
-          fontWeight: 500, zIndex: 999,
-          boxShadow: '0 4px 20px rgba(0,0,0,0.15)' }}>
-          {toast}
-        </div>
+    <div style={{ minHeight: '100vh', background: 'var(--grad-bg)' }}>
+      {toast.msg && (
+        <div style={{
+          position: 'fixed', top: 86, right: 16, left: 16,
+          maxWidth: 320, marginLeft: 'auto',
+          background: toast.type === 'error'
+            ? 'rgba(226,75,74,0.95)' : 'rgba(45,155,111,0.95)',
+          color: '#fff', padding: '12px 18px', borderRadius: 12,
+          fontSize: 14, fontWeight: 500, zIndex: 999,
+          animation: 'slideDown 0.3s ease',
+          boxShadow: '0 8px 30px rgba(0,0,0,0.4)',
+        }}>{toast.msg}</div>
       )}
 
-      <button onClick={() => navigate(-1)} style={{
-        background: 'none', border: '1.5px solid #ede8ff', color: '#7F77DD',
-        padding: '8px 16px', borderRadius: 10, fontSize: 13,
-        fontWeight: 500, marginBottom: 24, cursor: 'pointer' }}>
-        ← Back
-      </button>
+      <div style={{ maxWidth: 1200, margin: '0 auto',
+        padding: 'clamp(16px,3vw,32px) clamp(12px,3vw,24px) 80px' }}>
 
-      {/* Product Info */}
-      <div style={{ display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-  gap: 'clamp(20px, 4vw, 40px)', marginBottom: 48 }}>
-
-        {/* Image */}
-        <div style={{ borderRadius: 20, overflow: 'hidden',
-          background: 'linear-gradient(135deg, #f0eeff, #ffe4f0)',
-          height: 'clamp(260px, 40vw, 420px)', display: 'flex', alignItems: 'center',
-          justifyContent: 'center' }}>
-          {imgSrc(product.image)
-            ? <img src={imgSrc(product.image)} alt={product.name}
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            : <span style={{ fontSize: 80 }}>🛍️</span>}
-        </div>
-
-        {/* Details */}
-        <div>
-          <span style={{ fontSize: 12, background: '#f0eeff', color: '#7F77DD',
-            padding: '4px 12px', borderRadius: 20, fontWeight: 500 }}>
+        {/* Breadcrumb */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8,
+          marginBottom: 24, fontSize: 13, color: 'var(--text-muted)',
+          flexWrap: 'wrap' }}>
+          <span onClick={() => navigate('/')}
+            style={{ cursor: 'pointer', transition: 'color 0.2s' }}
+            onMouseEnter={e => e.currentTarget.style.color = 'var(--primary)'}
+            onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}>
+            Home
+          </span>
+          <span>›</span>
+          <span onClick={() => navigate('/')}
+            style={{ cursor: 'pointer', transition: 'color 0.2s' }}
+            onMouseEnter={e => e.currentTarget.style.color = 'var(--primary)'}
+            onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}>
             {product.category_name}
           </span>
-          <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: 32,
-            fontWeight: 600, margin: '12px 0 8px', lineHeight: 1.3 }}>
-            {product.name}
-          </h1>
-          <p style={{ fontSize: 14, color: '#aaa', marginBottom: 12 }}>
-            Sold by{' '}
-            <strong style={{ color: '#7F77DD' }}>{product.seller_name}</strong>
-          </p>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10,
-            marginBottom: 16 }}>
-            <StarRating value={Math.round(avgRating)} readonly />
-            <span style={{ fontSize: 14, fontWeight: 600,
-              color: '#333' }}>{avgRating}</span>
-            <span style={{ fontSize: 13, color: '#aaa' }}>
-              ({totalReviews} review{totalReviews !== 1 ? 's' : ''})
-            </span>
-          </div>
-
-          <div style={{ fontSize: 36, fontWeight: 700, marginBottom: 8,
-            background: 'linear-gradient(135deg, #7F77DD, #D4537E)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent' }}>
-            ₹{Number(product.price).toLocaleString('en-IN')}
-          </div>
-
-          <p style={{ fontSize: 13, fontWeight: 500, marginBottom: 20,
-            color: product.stock < 1 ? '#E24B4A'
-              : product.stock < 5 ? '#BA7517' : '#1D9E75' }}>
-            {product.stock < 1 ? '❌ Out of Stock'
-              : product.stock < 5 ? `⚠️ Only ${product.stock} left!`
-              : `✅ ${product.stock} in stock`}
-          </p>
-
-          {product.description && (
-            <p style={{ fontSize: 15, color: '#555', lineHeight: 1.8,
-              marginBottom: 24 }}>{product.description}</p>
-          )}
-
-          {/* Quantity */}
-          {product.stock > 0 && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12,
-              marginBottom: 20 }}>
-              <span style={{ fontSize: 14, fontWeight: 500, color: '#555' }}>
-                Quantity:
-              </span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10,
-                background: '#f7f5ff', borderRadius: 10, padding: '6px 12px',
-                border: '1.5px solid #ede8ff' }}>
-                <button onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                  style={{ background: 'none', border: 'none', fontSize: 18,
-                    cursor: 'pointer', color: '#7F77DD', fontWeight: 700 }}>−</button>
-                <span style={{ fontWeight: 600, fontSize: 15,
-                  minWidth: 20, textAlign: 'center' }}>{quantity}</span>
-                <button
-                  onClick={() => setQuantity(q => Math.min(product.stock, q + 1))}
-                  style={{ background: 'none', border: 'none', fontSize: 18,
-                    cursor: 'pointer', color: '#7F77DD', fontWeight: 700 }}>+</button>
-              </div>
-            </div>
-          )}
-
-          {/* Action Buttons */}
-          {product.stock > 0 && (
-            <div style={{ display: 'flex', gap: 12, marginBottom: 20 }}>
-              <button onClick={addToCart} style={{
-                flex: 1, background: '#f0eeff', color: '#7F77DD',
-                border: '2px solid #7F77DD', padding: '14px',
-                borderRadius: 12, fontSize: 15, fontWeight: 600,
-                cursor: 'pointer' }}>
-                🛒 Add to Cart
-              </button>
-              <button onClick={() => setShowOrderForm(!showOrderForm)} style={{
-                flex: 1,
-                background: 'linear-gradient(135deg, #7F77DD, #D4537E)',
-                color: '#fff', border: 'none', padding: '14px',
-                borderRadius: 12, fontSize: 15, fontWeight: 600,
-                cursor: 'pointer' }}>
-                ⚡ Order Now
-              </button>
-            </div>
-          )}
-
-          {/* Order Now Form */}
-          {showOrderForm && (
-            <div style={{ background: '#f7f5ff', borderRadius: 12, padding: 16,
-              border: '1.5px solid #ede8ff', marginBottom: 16 }}>
-              <label style={{ fontSize: 13, fontWeight: 500, color: '#555',
-  display: 'block', marginBottom: 10 }}>Delivery Details</label>
-<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr',
-  gap: 8, marginBottom: 8 }}>
-  <input placeholder="Recipient Name *"
-    value={address.name}
-    onChange={e => setAddress({ ...address, name: e.target.value })} />
-  <input placeholder="Phone Number *" type="tel"
-    value={address.phone}
-    onChange={e => setAddress({ ...address, phone: e.target.value })} />
-</div>
-<input placeholder="Flat / House No / Street *"
-  value={address.flat}
-  onChange={e => setAddress({ ...address, flat: e.target.value })}
-  style={{ marginBottom: 8 }} />
-<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr',
-  gap: 8, marginBottom: 10 }}>
-  <input placeholder="City *"
-    value={address.city}
-    onChange={e => setAddress({ ...address, city: e.target.value })} />
-  <input placeholder="State *"
-    value={address.state}
-    onChange={e => setAddress({ ...address, state: e.target.value })} />
-  <input placeholder="Pincode *"
-    value={address.pincode}
-    onChange={e => setAddress({ ...address, pincode: e.target.value })} />
-</div>
-              <button onClick={orderNow} disabled={orderLoading} style={{
-                width: '100%',
-                background: 'linear-gradient(135deg, #7F77DD, #D4537E)',
-                color: '#fff', border: 'none', padding: '12px',
-                borderRadius: 10, fontSize: 14, fontWeight: 600,
-                cursor: orderLoading ? 'not-allowed' : 'pointer',
-                opacity: orderLoading ? 0.7 : 1 }}>
-                {orderLoading ? 'Placing Order...' : 'Confirm Order 🎉'}
-              </button>
-            </div>
-          )}
-
-          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-            {['🚚 Free Delivery', '↩️ 7-Day Returns', '🔒 Secure Payment'].map(f => (
-              <span key={f} style={{ fontSize: 12, background: '#f0eeff',
-                color: '#7F77DD', padding: '5px 12px',
-                borderRadius: 20, fontWeight: 500 }}>{f}</span>
-            ))}
-          </div>
+          <span>›</span>
+          <span style={{ color: 'var(--text-secondary)',
+            overflow: 'hidden', textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap', maxWidth: 200 }}>{product.name}</span>
         </div>
-      </div>
 
-      {/* Reviews Section — Read Only */}
-      <div style={{ background: '#fff', borderRadius: 20, padding: 32,
-        boxShadow: '0 2px 16px rgba(127,119,221,0.08)',
-        border: '0.5px solid #f0eeff' }}>
-
-        <div style={{ display: 'flex', justifyContent: 'space-between',
-          alignItems: 'center', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
-          <div>
-            <h2 style={{ fontFamily: 'Playfair Display, serif', fontSize: 22,
-              fontWeight: 600 }}>Customer Reviews</h2>
-            {totalReviews > 0 && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10,
-                marginTop: 8 }}>
-                <span style={{ fontSize: 36, fontWeight: 700,
-                  color: '#F0C419' }}>{avgRating}</span>
-                <div>
-                  <StarRating value={Math.round(avgRating)} readonly />
-                  <p style={{ fontSize: 12, color: '#aaa', marginTop: 2 }}>
-                    Based on {totalReviews} review{totalReviews !== 1 ? 's' : ''}
-                  </p>
-                </div>
+        {/* Main product card */}
+        <div style={{
+          background: 'rgba(255,255,255,0.04)',
+          backdropFilter: 'blur(20px)',
+          border: '1px solid var(--border)',
+          borderRadius: 'var(--radius-xl)',
+          overflow: 'hidden',
+          marginBottom: 32,
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gap: 0,
+        }}>
+          {/* Image */}
+          <div style={{ position: 'relative', minHeight: 'clamp(280px,40vw,500px)',
+            background: 'var(--surface-2)', overflow: 'hidden' }}>
+            {!imgLoaded && (
+              <div className="skeleton" style={{ position: 'absolute',
+                inset: 0, zIndex: 1 }} />
+            )}
+            {imgSrc(product.image) ? (
+              <img
+                src={imgSrc(product.image)} alt={product.name}
+                onLoad={() => setImgLoaded(true)}
+                style={{
+                  width: '100%', height: '100%',
+                  objectFit: 'cover', objectPosition: 'center',
+                  position: 'absolute', inset: 0,
+                  transition: 'transform 0.5s ease',
+                  opacity: imgLoaded ? 1 : 0,
+                }}
+                onMouseEnter={e => e.target.style.transform = 'scale(1.04)'}
+                onMouseLeave={e => e.target.style.transform = 'scale(1)'}
+              />
+            ) : (
+              <div style={{ position: 'absolute', inset: 0, display: 'flex',
+                alignItems: 'center', justifyContent: 'center', fontSize: 80 }}>
+                🛍️
+              </div>
+            )}
+            {/* Category badge */}
+            <div style={{ position: 'absolute', top: 16, left: 16,
+              background: 'rgba(139,111,191,0.85)', backdropFilter: 'blur(8px)',
+              borderRadius: 20, padding: '5px 14px', fontSize: 12, fontWeight: 700,
+              color: '#fff', border: '1px solid rgba(255,255,255,0.2)' }}>
+              {product.category_name}
+            </div>
+            {product.stock < 5 && product.stock > 0 && (
+              <div style={{ position: 'absolute', top: 16, right: 16,
+                background: 'rgba(232,118,58,0.9)',
+                borderRadius: 20, padding: '5px 12px', fontSize: 11,
+                fontWeight: 700, color: '#fff' }}>
+                Only {product.stock} left!
               </div>
             )}
           </div>
-          <div style={{ background: '#f7f5ff', borderRadius: 12,
-            padding: '10px 16px', border: '1.5px solid #ede8ff' }}>
-            <p style={{ fontSize: 12, color: '#7F77DD', fontWeight: 500 }}>
-              💡 Purchased this product?
+
+          {/* Info */}
+          <div style={{ padding: 'clamp(20px,4vw,40px)',
+            display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10,
+              marginBottom: 12, flexWrap: 'wrap' }}>
+              {avgRating && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 5,
+                  background: 'rgba(212,168,83,0.15)',
+                  border: '1px solid rgba(212,168,83,0.3)',
+                  borderRadius: 20, padding: '4px 12px' }}>
+                  <span style={{ color: '#D4A853', fontSize: 13 }}>★</span>
+                  <span style={{ fontSize: 13, fontWeight: 700,
+                    color: '#D4A853' }}>{avgRating}</span>
+                  <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                    ({reviews.length})
+                  </span>
+                </div>
+              )}
+              <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                by {product.seller_name}
+              </span>
+            </div>
+
+            <h1 style={{ fontFamily: 'Cormorant Garamond, serif',
+              fontSize: 'clamp(22px,3.5vw,36px)', fontWeight: 700,
+              color: '#fff', lineHeight: 1.2, marginBottom: 14 }}>
+              {product.name}
+            </h1>
+
+            <p style={{ color: 'var(--text-secondary)', fontSize: 14.5,
+              lineHeight: 1.8, marginBottom: 24 }}>
+              {product.description || 'A beautiful handcrafted product made with love by our women artisans.'}
             </p>
-            <p style={{ fontSize: 12, color: '#888', marginTop: 2 }}>
-              Go to <strong>My Orders</strong> to leave a review.
-            </p>
+
+            {/* Price */}
+            <div style={{ marginBottom: 24 }}>
+              <div style={{ fontFamily: 'Cormorant Garamond, serif',
+                fontSize: 'clamp(28px,5vw,44px)', fontWeight: 700,
+                color: '#D4A853', marginBottom: 4 }}>
+                ₹{Number(product.price).toLocaleString('en-IN')}
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div style={{ width: 8, height: 8, borderRadius: '50%',
+                  background: product.stock > 0 ? '#2D9B6F' : '#E24B4A',
+                  animation: product.stock > 0 ? 'pulse 2s infinite' : 'none' }} />
+                <span style={{ fontSize: 13, fontWeight: 600,
+                  color: product.stock > 0 ? '#7DEBB5' : '#FF8A8A' }}>
+                  {product.stock > 0 ? `In Stock (${product.stock} available)` : 'Out of Stock'}
+                </span>
+              </div>
+            </div>
+
+            {product.stock > 0 && (
+              <>
+                {/* Quantity */}
+                <div style={{ marginBottom: 20 }}>
+                  <label style={{ display: 'block', fontSize: 11.5, fontWeight: 700,
+                    color: 'var(--text-muted)', marginBottom: 10,
+                    letterSpacing: 0.8, textTransform: 'uppercase' }}>
+                    Quantity
+                  </label>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    {[-1, qty, 1].map((v, i) => i === 1 ? (
+                      <span key="qty" style={{ minWidth: 36, textAlign: 'center',
+                        fontSize: 18, fontWeight: 700, color: '#fff' }}>{qty}</span>
+                    ) : (
+                      <button key={i} onClick={() => setQty(q => Math.max(1, Math.min(product.stock, q + v)))}
+                        style={{ width: 38, height: 38, borderRadius: 10,
+                          background: 'rgba(255,255,255,0.08)',
+                          border: '1px solid var(--border-strong)',
+                          color: '#fff', fontSize: 18, cursor: 'pointer',
+                          display: 'flex', alignItems: 'center',
+                          justifyContent: 'center', transition: 'all 0.15s' }}
+                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(139,111,191,0.2)'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}>
+                        {v === -1 ? '−' : '+'}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Buttons */}
+                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                  <button onClick={addToCart} style={{
+                    flex: 1, minWidth: 140, padding: '14px 20px',
+                    background: 'rgba(139,111,191,0.15)',
+                    border: '2px solid rgba(139,111,191,0.5)',
+                    color: '#C4A8E8', borderRadius: 13,
+                    fontSize: 14, fontWeight: 700, cursor: 'pointer',
+                    fontFamily: 'inherit', transition: 'all 0.2s',
+                  }}
+                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(139,111,191,0.25)'; e.currentTarget.style.borderColor = 'rgba(139,111,191,0.8)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = 'rgba(139,111,191,0.15)'; e.currentTarget.style.borderColor = 'rgba(139,111,191,0.5)'; }}>
+                    🛒 Add to Cart
+                  </button>
+                  <button onClick={orderNow} style={{
+                    flex: 1, minWidth: 140, padding: '14px 20px',
+                    background: 'var(--grad-primary)',
+                    border: 'none', color: '#fff', borderRadius: 13,
+                    fontSize: 14, fontWeight: 700, cursor: 'pointer',
+                    fontFamily: 'inherit',
+                    boxShadow: '0 6px 20px rgba(139,111,191,0.35)',
+                    transition: 'all 0.2s',
+                  }}
+                    onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 10px 28px rgba(139,111,191,0.5)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(139,111,191,0.35)'; }}>
+                    ⚡ Buy Now
+                  </button>
+                </div>
+              </>
+            )}
+
+            {/* Seller info */}
+            <div style={{ marginTop: 24, padding: '14px 16px',
+              background: 'rgba(255,255,255,0.04)',
+              borderRadius: 12, border: '1px solid var(--border)',
+              display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ width: 40, height: 40, borderRadius: 10,
+                background: 'var(--grad-primary)', flexShrink: 0,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#fff', fontWeight: 700, fontSize: 16 }}>
+                {product.seller_name?.charAt(0)}
+              </div>
+              <div>
+                <p style={{ fontWeight: 600, fontSize: 14, color: '#fff' }}>
+                  {product.seller_name}
+                </p>
+                <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                  ✓ Verified Woman Entrepreneur
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Reviews List */}
-        {reviews.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '48px 0', color: '#bbb' }}>
-            <div style={{ fontSize: 48, marginBottom: 12 }}>⭐</div>
-            <p style={{ fontSize: 15, fontWeight: 500, color: '#aaa' }}>
-              No reviews for this product yet.
-            </p>
-            <p style={{ fontSize: 13, color: '#bbb', marginTop: 6 }}>
-              Order this product and be the first to review it!
-            </p>
-          </div>
-        ) : (
-          reviews.map((r, i) => (
-            <div key={r.id} style={{ padding: '20px 0',
-              borderTop: '1px solid #f0eeff', display: 'flex', gap: 14 }}>
-              <div style={{ width: 42, height: 42, borderRadius: '50%',
-                flexShrink: 0,
-                background: 'linear-gradient(135deg, #7F77DD, #D4537E)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: '#fff', fontSize: 16, fontWeight: 600 }}>
-                {r.reviewer.charAt(0).toUpperCase()}
-              </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between',
-                  alignItems: 'flex-start', marginBottom: 6, flexWrap: 'wrap',
-                  gap: 8 }}>
-                  <div>
-                    <span style={{ fontWeight: 600, fontSize: 14 }}>
-                      {r.reviewer}
-                    </span>
-                    <span style={{ fontSize: 12, color: '#aaa', marginLeft: 10 }}>
-                      {new Date(r.created_at).toLocaleDateString('en-IN',
-                        { day: 'numeric', month: 'short', year: 'numeric' })}
-                    </span>
-                  </div>
-                  <StarRating value={r.rating} readonly />
+        {/* Reviews */}
+        <div style={{ background: 'rgba(255,255,255,0.03)',
+          border: '1px solid var(--border)', borderRadius: 'var(--radius-xl)',
+          overflow: 'hidden' }}>
+          <div style={{ padding: '20px 24px',
+            borderBottom: '1px solid var(--border)',
+            display: 'flex', justifyContent: 'space-between',
+            alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
+            <div>
+              <h2 style={{ fontFamily: 'Cormorant Garamond, serif',
+                fontSize: 22, fontWeight: 700, color: '#fff' }}>
+                Customer Reviews
+              </h2>
+              {avgRating && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8,
+                  marginTop: 4 }}>
+                  <span style={{ fontSize: 24, color: '#D4A853' }}>★</span>
+                  <span style={{ fontSize: 20, fontWeight: 800,
+                    color: '#D4A853' }}>{avgRating}</span>
+                  <span style={{ color: 'var(--text-muted)', fontSize: 13 }}>
+                    from {reviews.length} review{reviews.length !== 1 ? 's' : ''}
+                  </span>
                 </div>
-                {r.comment && (
-                  <p style={{ fontSize: 14, color: '#555', lineHeight: 1.7 }}>
-                    {r.comment}
-                  </p>
-                )}
-              </div>
+              )}
             </div>
-          ))
-        )}
+          </div>
+
+          {reviews.length === 0 ? (
+            <div style={{ padding: '48px 24px', textAlign: 'center' }}>
+              <div style={{ fontSize: 48, marginBottom: 12,
+                animation: 'float 3s ease-in-out infinite' }}>⭐</div>
+              <p style={{ color: 'var(--text-muted)', fontSize: 15 }}>
+                No reviews yet. Be the first to review!
+              </p>
+            </div>
+          ) : (
+            <div style={{ padding: 'clamp(12px,2vw,20px)' }}>
+              {reviews.map((r, i) => (
+                <div key={r.id} style={{
+                  padding: '18px 20px', marginBottom: 10,
+                  background: 'rgba(255,255,255,0.03)',
+                  borderRadius: 14,
+                  border: '1px solid var(--border)',
+                  animation: `fadeUp 0.4s ease ${i * 0.08}s both`,
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center',
+                    gap: 10, marginBottom: 8, flexWrap: 'wrap' }}>
+                    <div style={{ width: 34, height: 34, borderRadius: 9,
+                      background: 'var(--grad-primary)', flexShrink: 0,
+                      display: 'flex', alignItems: 'center',
+                      justifyContent: 'center', color: '#fff',
+                      fontWeight: 700, fontSize: 13 }}>
+                      {r.user_name?.charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <p style={{ fontWeight: 600, fontSize: 14,
+                        color: 'var(--text-primary)' }}>{r.user_name}</p>
+                      <p style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+                        {new Date(r.created_at).toLocaleDateString('en-IN')}
+                      </p>
+                    </div>
+                    <div style={{ marginLeft: 'auto' }}>
+                      {[1,2,3,4,5].map(s => (
+                        <span key={s} style={{ color: s <= r.rating ? '#D4A853' : 'rgba(255,255,255,0.15)', fontSize: 15 }}>★</span>
+                      ))}
+                    </div>
+                  </div>
+                  {r.comment && (
+                    <p style={{ fontSize: 14, color: 'var(--text-secondary)',
+                      lineHeight: 1.7, paddingLeft: 44 }}>
+                      {r.comment}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
