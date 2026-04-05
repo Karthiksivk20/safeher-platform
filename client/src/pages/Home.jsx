@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link, useSearchParams, useNavigate }from 'react-router-dom';
-const API = 'https://safeher-backend-uyzs.onrender.com';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+
+const API = 'https://safeher-backend-uyzs.onrender.com';
 
 const FEATURED_ENTREPRENEURS = [
   { name: 'Priya Sharma', city: 'Jaipur, Rajasthan', category: 'Handicrafts', story: 'Started with ₹5,000, now runs a 12-member weaving cooperative earning ₹45,000/month.', emoji: '🧵' },
@@ -11,8 +12,7 @@ const FEATURED_ENTREPRENEURS = [
 ];
 
 const imgSrc = (image) =>
-  image?.startsWith('http') ? image : image
-    ? `${API}/uploads/${image}` : null;
+  image?.startsWith('http') ? image : image ? `${API}/uploads/${image}` : null;
 
 export default function Home() {
   const [products, setProducts] = useState([]);
@@ -37,26 +37,24 @@ export default function Home() {
       if (c) params.category = c;
       if (min) params.min_price = min;
       if (max) params.max_price = max;
-      const { data } = await axios.get('https://safeher-backend-uyzs.onrender.com/api/products', { params });
+      const { data } = await axios.get(`${API}/api/products`, { params });
       setProducts(data);
     } finally {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
     const q = searchParams.get('search') || '';
     setSearch(q);
-    axios.get('https://safeher-backend-uyzs.onrender.com/api/products/categories/all')
-      .then(r => setCategories(r.data)).catch(() => {});
-    axios.get('https://safeher-backend-uyzs.onrender.com/api/admin/stats')
-      .then(r => setStats(r.data)).catch(() => {});
+    axios.get(`${API}/api/products/categories/all`).then(r => setCategories(r.data)).catch(() => {});
+    axios.get(`${API}/api/admin/stats`).then(r => setStats(r.data)).catch(() => {});
     load(q, '', '', '');
   }, [searchParams]);
 
   const addToCart = async (product_id) => {
     if (!user) return showToast('Please login to add items to cart');
-    await axios.post('https://safeher-backend-uyzs.onrender.com/api/cart/add',
+    await axios.post(`${API}/api/cart/add`,
       { product_id, quantity: 1 },
       { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
     );
@@ -66,19 +64,27 @@ export default function Home() {
   const isFiltered = search || category || priceRange.min || priceRange.max;
 
   const categoryEmojis = ['🧵', '👗', '🌶️', '💍', '🏡', '💄'];
-  const categoryColors = ['#f0eeff', '#fff0f6', '#fff8e6', '#eafaf3', '#e6f1fb', '#fef3e2'];
-  const categoryTextColors = ['#7F77DD', '#D4537E', '#BA7517', '#0F6E56', '#185FA5', '#854F0B'];
+  const categoryGradients = [
+    'rgba(139,111,191,0.2)', 'rgba(196,88,122,0.2)',
+    'rgba(212,168,83,0.2)', 'rgba(45,155,111,0.2)',
+    'rgba(24,95,165,0.2)', 'rgba(133,79,11,0.2)',
+  ];
+  const categoryColors = ['#C4A8E8', '#F0A0C0', '#D4A853', '#7DEBB5', '#7AB8F5', '#E8A060'];
 
   return (
-    <div style={{ maxWidth: 1200, margin: '0 auto',
-      padding: '0 clamp(12px, 3vw, 24px) 60px' }}>
+    <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 clamp(12px,3vw,24px) 80px' }}>
 
+      {/* Toast */}
       {toast && (
-        <div style={{ position: 'fixed', top: 80, right: 16, left: 16,
+        <div style={{
+          position: 'fixed', top: 80, right: 16, left: 16,
           maxWidth: 300, marginLeft: 'auto',
-          background: '#1a1a2e', color: '#fff', padding: '12px 20px',
-          borderRadius: 10, fontSize: 14, fontWeight: 500,
-          zIndex: 999, boxShadow: '0 4px 20px rgba(0,0,0,0.15)' }}>
+          background: 'rgba(45,155,111,0.95)', color: '#fff',
+          padding: '12px 20px', borderRadius: 10,
+          fontSize: 14, fontWeight: 500, zIndex: 999,
+          boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+          animation: 'slideDown 0.3s ease',
+        }}>
           {toast}
         </div>
       )}
@@ -87,110 +93,125 @@ export default function Home() {
         <>
           {/* Hero */}
           <div style={{
-            background: 'linear-gradient(135deg, #7F77DD 0%, #D4537E 100%)',
-            borderRadius: 'clamp(12px, 2vw, 24px)',
-            padding: 'clamp(24px, 4vw, 56px) clamp(20px, 4vw, 48px)',
-            marginTop: 'clamp(16px, 3vw, 32px)',
-            marginBottom: 'clamp(24px, 4vw, 48px)',
+            background: 'var(--grad-primary)',
+            borderRadius: 'clamp(12px,2vw,24px)',
+            padding: 'clamp(24px,4vw,56px) clamp(20px,4vw,48px)',
+            marginTop: 'clamp(16px,3vw,32px)',
+            marginBottom: 'clamp(24px,4vw,48px)',
             color: '#fff', position: 'relative', overflow: 'hidden',
           }}>
             <div style={{ position: 'absolute', top: -60, right: -60,
               width: 280, height: 280, borderRadius: '50%',
               background: 'rgba(255,255,255,0.07)' }} />
             <div style={{ position: 'absolute', top: 20, right: 48,
-              fontSize: 'clamp(40px, 8vw, 80px)', opacity: 0.15 }}>🌸</div>
-            <p style={{ fontSize: 'clamp(10px, 1.5vw, 12px)', fontWeight: 600,
-              opacity: 0.75, letterSpacing: 2,
-              textTransform: 'uppercase', marginBottom: 14 }}>
+              fontSize: 'clamp(40px,8vw,80px)', opacity: 0.15 }}>🌸</div>
+            <p style={{ fontSize: 'clamp(10px,1.5vw,12px)', fontWeight: 700,
+              opacity: 0.8, letterSpacing: 2, textTransform: 'uppercase',
+              marginBottom: 14 }}>
               SDG 5 — Gender Equality
             </p>
-            <h1 style={{ fontFamily: 'Playfair Display, serif',
-              fontSize: 'clamp(22px, 4vw, 42px)',
-              fontWeight: 600, lineHeight: 1.2, marginBottom: 16,
-              maxWidth: 560 }}>
+            <h1 style={{ fontFamily: 'Cormorant Garamond, serif',
+              fontSize: 'clamp(22px,4vw,46px)', fontWeight: 700,
+              lineHeight: 1.2, marginBottom: 16, maxWidth: 560, color: '#fff' }}>
               Empowering Women<br />Entrepreneurs Across India
             </h1>
-            <p style={{ opacity: 0.85, fontSize: 'clamp(13px, 2vw, 16px)',
+            <p style={{ opacity: 0.9, fontSize: 'clamp(13px,2vw,16px)',
               maxWidth: 480, lineHeight: 1.7, marginBottom: 28 }}>
               Discover handcrafted products, support women-led businesses,
               and be part of a movement that's changing lives.
             </p>
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
               <button onClick={() => window.scrollTo({ top: 600, behavior: 'smooth' })}
-                style={{ background: '#fff', color: '#7F77DD',
-                  padding: 'clamp(10px, 2vw, 12px) clamp(16px, 3vw, 24px)',
-                  borderRadius: 12, fontWeight: 600,
-                  fontSize: 'clamp(12px, 1.5vw, 14px)', border: 'none',
-                  cursor: 'pointer' }}>
+                style={{ background: '#fff', color: '#8B6FBF',
+                  padding: 'clamp(10px,2vw,13px) clamp(16px,3vw,28px)',
+                  borderRadius: 12, fontWeight: 700,
+                  fontSize: 'clamp(12px,1.5vw,14px)', border: 'none', cursor: 'pointer',
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.2)' }}>
                 Shop Now 🛍️
               </button>
               <Link to="/stories" style={{
                 background: 'rgba(255,255,255,0.15)', color: '#fff',
-                padding: 'clamp(10px, 2vw, 12px) clamp(16px, 3vw, 24px)',
-                borderRadius: 12, fontWeight: 600,
-                fontSize: 'clamp(12px, 1.5vw, 14px)',
-                border: '1.5px solid rgba(255,255,255,0.3)' }}>
+                padding: 'clamp(10px,2vw,13px) clamp(16px,3vw,28px)',
+                borderRadius: 12, fontWeight: 700,
+                fontSize: 'clamp(12px,1.5vw,14px)',
+                border: '1.5px solid rgba(255,255,255,0.35)' }}>
                 Read Stories ⭐
               </Link>
             </div>
           </div>
 
-          {/* Stats */}
-          <p style={{ textAlign: 'center', color: '#aaa', fontSize: 13,
-            marginBottom: 16 }}>Live platform stats — updated in real time</p>
-          <div style={{ display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
-            gap: 'clamp(8px, 2vw, 16px)',
-            marginBottom: 'clamp(24px, 4vw, 56px)' }}>
+          {/* Stats — full width, 4 equal columns */}
+          <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: 13, marginBottom: 16 }}>
+            Live platform stats — updated in real time
+          </p>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',   // ✅ always 4 equal columns
+            gap: 'clamp(8px,2vw,16px)',
+            marginBottom: 'clamp(24px,4vw,56px)',
+          }}>
             {[
               { icon: '👩‍💼', value: stats.sellers, label: 'Women Sellers' },
               { icon: '🛍️', value: stats.products, label: 'Products Listed' },
               { icon: '📦', value: stats.orders, label: 'Orders Placed' },
               { icon: '💰', value: '₹' + Number(stats.revenue || 0).toLocaleString('en-IN'), label: 'Revenue Generated' },
             ].map(s => (
-              <div key={s.label} style={{ background: '#fff', borderRadius: 16,
-                padding: 'clamp(14px, 2vw, 24px) clamp(12px, 2vw, 20px)',
-                textAlign: 'center',
-                boxShadow: '0 2px 16px rgba(127,119,221,0.08)',
-                border: '0.5px solid #f0eeff' }}>
-                <div style={{ fontSize: 'clamp(24px, 4vw, 32px)',
-                  marginBottom: 10 }}>{s.icon}</div>
-                <div style={{ fontSize: 'clamp(20px, 3vw, 28px)', fontWeight: 700,
-                  background: 'linear-gradient(135deg, #7F77DD, #D4537E)',
+              <div key={s.label} style={{
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid var(--border-strong)',
+                borderRadius: 16, padding: 'clamp(14px,2vw,24px)',
+                textAlign: 'center', backdropFilter: 'blur(10px)',
+              }}>
+                <div style={{ fontSize: 'clamp(24px,4vw,32px)', marginBottom: 10 }}>{s.icon}</div>
+                <div style={{
+                  fontSize: 'clamp(20px,3vw,28px)', fontWeight: 800,
+                  background: 'var(--grad-primary)',
                   WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-                  marginBottom: 4 }}>{s.value}</div>
-                <div style={{ fontSize: 'clamp(11px, 1.5vw, 13px)',
-                  color: '#888' }}>{s.label}</div>
+                  marginBottom: 4,
+                }}>{s.value}</div>
+                <div style={{ fontSize: 'clamp(11px,1.5vw,13px)', color: 'var(--text-muted)' }}>
+                  {s.label}
+                </div>
               </div>
             ))}
           </div>
 
-          {/* Categories */}
-          <div style={{ marginBottom: 'clamp(24px, 4vw, 56px)' }}>
-            <h2 style={{ fontFamily: 'Playfair Display, serif',
-              fontSize: 'clamp(18px, 3vw, 24px)', fontWeight: 600,
-              marginBottom: 20 }}>Shop by Category</h2>
-            <div style={{ display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
-              gap: 'clamp(8px, 2vw, 12px)' }}>
+          {/* Categories — full width */}
+          <div style={{ marginBottom: 'clamp(24px,4vw,56px)' }}>
+            <h2 style={{
+              fontFamily: 'Cormorant Garamond, serif',
+              fontSize: 'clamp(18px,3vw,26px)', fontWeight: 700,
+              color: '#F0EAF8', marginBottom: 20,
+            }}>Shop by Category</h2>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: `repeat(${categories.length || 6}, 1fr)`,  // ✅ stretch all categories equally
+              gap: 'clamp(8px,2vw,14px)',
+            }}>
               {categories.map((c, i) => (
                 <div key={c.id}
                   onClick={() => { setCategory(String(c.id)); load('', c.id, priceRange.min, priceRange.max); }}
-                  style={{ background: categoryColors[i % categoryColors.length],
-                    borderRadius: 14, padding: 'clamp(12px, 2vw, 20px) 12px',
-                    textAlign: 'center', cursor: 'pointer',
+                  style={{
+                    background: String(category) === String(c.id)
+                      ? categoryGradients[i % categoryGradients.length].replace('0.2', '0.4')
+                      : categoryGradients[i % categoryGradients.length],
                     border: `2px solid ${String(category) === String(c.id)
-                      ? categoryTextColors[i % categoryTextColors.length]
-                      : 'transparent'}`,
-                    transition: 'transform 0.2s' }}
+                      ? categoryColors[i % categoryColors.length]
+                      : 'rgba(255,255,255,0.08)'}`,
+                    borderRadius: 14,
+                    padding: 'clamp(12px,2vw,22px) 8px',
+                    textAlign: 'center', cursor: 'pointer',
+                    transition: 'transform 0.2s, border-color 0.2s',
+                  }}
                   onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-3px)'}
                   onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
-                  <div style={{ fontSize: 'clamp(20px, 3vw, 28px)',
-                    marginBottom: 8 }}>
+                  <div style={{ fontSize: 'clamp(20px,3vw,30px)', marginBottom: 8 }}>
                     {categoryEmojis[i % categoryEmojis.length]}
                   </div>
-                  <div style={{ fontSize: 'clamp(10px, 1.5vw, 12px)', fontWeight: 600,
-                    color: categoryTextColors[i % categoryTextColors.length] }}>
+                  <div style={{
+                    fontSize: 'clamp(10px,1.2vw,13px)', fontWeight: 700,
+                    color: categoryColors[i % categoryColors.length],
+                  }}>
                     {c.name}
                   </div>
                 </div>
@@ -198,40 +219,59 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Featured Entrepreneurs */}
-          <div style={{ marginBottom: 'clamp(24px, 4vw, 56px)' }}>
+          {/* Featured Entrepreneurs — full width 3 columns */}
+          <div style={{ marginBottom: 'clamp(24px,4vw,56px)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between',
               alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 8 }}>
-              <h2 style={{ fontFamily: 'Playfair Display, serif',
-                fontSize: 'clamp(18px, 3vw, 24px)', fontWeight: 600 }}>
+              <h2 style={{
+                fontFamily: 'Cormorant Garamond, serif',
+                fontSize: 'clamp(18px,3vw,26px)', fontWeight: 700, color: '#F0EAF8',
+              }}>
                 Featured Entrepreneurs
               </h2>
-              <Link to="/stories" style={{ fontSize: 13, color: '#7F77DD',
-                fontWeight: 500 }}>View all →</Link>
+              <Link to="/stories" style={{ fontSize: 13, color: 'var(--primary)', fontWeight: 600 }}>
+                View all →
+              </Link>
             </div>
-            <div style={{ display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
-              gap: 20 }}>
-              {FEATURED_ENTREPRENEURS.map(e => (
-                <div key={e.name} style={{ background: '#fff', borderRadius: 16,
-                  padding: 24, boxShadow: '0 2px 16px rgba(127,119,221,0.08)',
-                  border: '0.5px solid #f0eeff' }}>
-                  <div style={{ display: 'flex', alignItems: 'center',
-                    gap: 14, marginBottom: 14 }}>
-                    <div style={{ width: 52, height: 52, borderRadius: '50%',
-                      background: 'linear-gradient(135deg, #f0eeff, #ffe4f0)',
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',   // ✅ always 3 equal columns
+              gap: 20,
+            }}>
+              {FEATURED_ENTREPRENEURS.map((e, i) => (
+                <div key={e.name} style={{
+                  background: 'rgba(255,255,255,0.05)',
+                  border: '1px solid var(--border-strong)',
+                  borderRadius: 16, padding: 24,
+                  backdropFilter: 'blur(10px)',
+                  transition: 'transform 0.2s, border-color 0.2s',
+                }}
+                  onMouseEnter={e2 => {
+                    e2.currentTarget.style.transform = 'translateY(-3px)';
+                    e2.currentTarget.style.borderColor = 'rgba(139,111,191,0.5)';
+                  }}
+                  onMouseLeave={e2 => {
+                    e2.currentTarget.style.transform = 'translateY(0)';
+                    e2.currentTarget.style.borderColor = 'var(--border-strong)';
+                  }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 14 }}>
+                    <div style={{
+                      width: 52, height: 52, borderRadius: '50%',
+                      background: categoryGradients[i % categoryGradients.length],
+                      border: `2px solid ${categoryColors[i % categoryColors.length]}`,
                       display: 'flex', alignItems: 'center',
-                      justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>
+                      justifyContent: 'center', fontSize: 24, flexShrink: 0,
+                    }}>
                       {e.emoji}
                     </div>
                     <div>
-                      <p style={{ fontWeight: 600, fontSize: 15 }}>{e.name}</p>
-                      <p style={{ fontSize: 12, color: '#aaa' }}>
+                      <p style={{ fontWeight: 700, fontSize: 15, color: '#F0EAF8' }}>{e.name}</p>
+                      <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>
                         {e.city} · {e.category}
                       </p>
                     </div>
                   </div>
-                  <p style={{ fontSize: 13, color: '#666', lineHeight: 1.7 }}>
+                  <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.7 }}>
                     {e.story}
                   </p>
                 </div>
@@ -241,42 +281,44 @@ export default function Home() {
         </>
       )}
 
-      {/* Search Bar */}
-      <div style={{ background: '#fff', borderRadius: 14, padding: 'clamp(10px, 2vw, 16px)',
-        boxShadow: '0 2px 12px rgba(127,119,221,0.08)',
-        marginBottom: 28, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+      {/* Search / Filter Bar */}
+      <div style={{
+        background: 'rgba(255,255,255,0.05)',
+        backdropFilter: 'blur(16px)',
+        border: '1px solid var(--border-strong)',
+        borderRadius: 14, padding: 'clamp(10px,2vw,16px)',
+        marginBottom: 28, display: 'flex', gap: 10, flexWrap: 'wrap',
+      }}>
         <input placeholder="🔍  Search products..."
           style={{ flex: 1, minWidth: 150 }} value={search}
           onChange={e => setSearch(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && load(search, category, priceRange.min, priceRange.max)} />
-        
-        <select style={{ width: 'clamp(130px, 20vw, 180px)' }} value={category}
+        <select style={{ width: 'clamp(130px,20vw,180px)' }} value={category}
           onChange={e => { setCategory(e.target.value); load(search, e.target.value, priceRange.min, priceRange.max); }}>
           <option value="">All Categories</option>
           {categories.map(c => (
             <option key={c.id} value={c.id}>{c.name}</option>
           ))}
         </select>
-        
         <input placeholder="Min ₹" type="number"
           style={{ width: 80 }} value={priceRange.min}
           onChange={e => setPriceRange({ ...priceRange, min: e.target.value })} />
-        
         <input placeholder="Max ₹" type="number"
           style={{ width: 80 }} value={priceRange.max}
           onChange={e => setPriceRange({ ...priceRange, max: e.target.value })} />
-        
         <button onClick={() => load(search, category, priceRange.min, priceRange.max)} style={{
-          background: 'linear-gradient(135deg, #7F77DD, #D4537E)',
-          color: '#fff', border: 'none', padding: '11px clamp(14px, 2vw, 24px)',
-          borderRadius: 10, fontWeight: 600, fontSize: 14,
-          cursor: 'pointer' }}>Search</button>
-        
+          background: 'var(--grad-primary)', color: '#fff', border: 'none',
+          padding: '11px clamp(14px,2vw,24px)', borderRadius: 10,
+          fontWeight: 700, fontSize: 14, cursor: 'pointer',
+        }}>Search</button>
         {isFiltered && (
           <button onClick={() => { setSearch(''); setCategory(''); setPriceRange({ min: '', max: '' }); load('', '', '', ''); }}
-            style={{ background: '#fff', border: '1.5px solid #ede8ff',
-              color: '#888', padding: '10px 14px', borderRadius: 10,
-              fontSize: 13, cursor: 'pointer' }}>
+            style={{
+              background: 'rgba(255,255,255,0.06)',
+              border: '1.5px solid var(--border)',
+              color: 'var(--text-muted)', padding: '10px 14px',
+              borderRadius: 10, fontSize: 13, cursor: 'pointer',
+            }}>
             Clear ✕
           </button>
         )}
@@ -285,21 +327,24 @@ export default function Home() {
       {/* Section Title */}
       <div style={{ display: 'flex', justifyContent: 'space-between',
         alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 8 }}>
-        <div>
-          <h2 style={{ fontFamily: 'Playfair Display, serif',
-            fontSize: 'clamp(16px, 2.5vw, 22px)', fontWeight: 600 }}>
-            {category
-              ? `${categories.find(c => String(c.id) === String(category))?.name || 'Category'} (${products.length})`
-              : search ? `Results for "${search}" (${products.length})`
-              : priceRange.min || priceRange.max ? `Price: ${priceRange.min || '0'} - ${priceRange.max || '∞'} (${products.length})`
-              : `All Products (${products.length})`}
-          </h2>
-        </div>
+        <h2 style={{
+          fontFamily: 'Cormorant Garamond, serif',
+          fontSize: 'clamp(16px,2.5vw,24px)', fontWeight: 700, color: '#F0EAF8',
+        }}>
+          {category
+            ? `${categories.find(c => String(c.id) === String(category))?.name || 'Category'} (${products.length})`
+            : search ? `Results for "${search}" (${products.length})`
+            : priceRange.min || priceRange.max ? `Price filtered (${products.length})`
+            : `All Products (${products.length})`}
+        </h2>
         {isFiltered && (
           <button onClick={() => { setSearch(''); setCategory(''); setPriceRange({ min: '', max: '' }); load('', '', '', ''); }}
-            style={{ background: '#fff', border: '1.5px solid #ede8ff',
-              color: '#7F77DD', padding: '8px 14px', borderRadius: 10,
-              fontSize: 13, fontWeight: 500, cursor: 'pointer' }}>
+            style={{
+              background: 'rgba(139,111,191,0.1)',
+              border: '1.5px solid var(--border-strong)',
+              color: '#C4A8E8', padding: '8px 14px',
+              borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: 'pointer',
+            }}>
             ✕ Clear Filter
           </button>
         )}
@@ -308,122 +353,115 @@ export default function Home() {
       {/* Products Grid */}
       {loading ? (
         <div>
-          <div style={{ textAlign: 'center', padding: '20px 0 28px',
-            background: '#fff8e6', borderRadius: 12, marginBottom: 20,
-            border: '1px solid #FAC775' }}>
-            <p style={{ fontSize: 14, color: '#BA7517', fontWeight: 500 }}>
+          <div style={{
+            textAlign: 'center', padding: '16px 20px',
+            background: 'rgba(212,168,83,0.1)',
+            borderRadius: 12, marginBottom: 20,
+            border: '1px solid rgba(212,168,83,0.3)',
+          }}>
+            <p style={{ fontSize: 14, color: '#D4A853', fontWeight: 600 }}>
               ⏳ Server is waking up... Products will load in 20-30 seconds.
             </p>
-            <p style={{ fontSize: 12, color: '#aaa', marginTop: 4 }}>
+            <p style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>
               This only happens on the first visit. Subsequent loads are instant.
             </p>
           </div>
           <div style={{ display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 20 }}>
+            gridTemplateColumns: 'repeat(auto-fill, minmax(220px,1fr))', gap: 20 }}>
             {[1,2,3,4,5,6].map(i => (
-              <div key={i} style={{ background: '#fff', borderRadius: 16,
-                overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-                <div style={{ height: 180, background: 'linear-gradient(90deg, #f0eeff 25%, #e8e4ff 50%, #f0eeff 75%)',
-                  backgroundSize: '200% 100%',
-                  animation: 'shimmer 1.5s infinite' }} />
-                <div style={{ padding: 16 }}>
-                  <div style={{ height: 14, background: '#f0eeff',
-                    borderRadius: 6, marginBottom: 8, width: '70%' }} />
-                  <div style={{ height: 12, background: '#f0eeff',
-                    borderRadius: 6, width: '40%' }} />
-                </div>
-              </div>
+              <div key={i} className="skeleton" style={{ borderRadius: 16, height: 280 }} />
             ))}
           </div>
-          <style>{`
-            @keyframes shimmer {
-              0% { background-position: 200% 0; }
-              100% { background-position: -200% 0; }
-            }
-          `}</style>
         </div>
       ) : products.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '60px 0', color: '#aaa' }}>
+        <div style={{ textAlign: 'center', padding: '60px 0' }}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>🛍️</div>
-          <p style={{ fontSize: 15 }}>No products found.</p>
+          <p style={{ fontSize: 15, color: 'var(--text-muted)' }}>No products found.</p>
         </div>
       ) : (
-        <div style={{ display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 20 }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(220px,1fr))',
+          gap: 20,
+        }}>
           {products.map(p => (
             <div key={p.id} onClick={() => navigate(`/product/${p.id}`)}
-              style={{ background: '#fff', borderRadius: 16, overflow: 'hidden',
-                boxShadow: '0 2px 16px rgba(127,119,221,0.09)', cursor: 'pointer',
-                transition: 'transform 0.2s, box-shadow 0.2s' }}
+              style={{
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid var(--border)',
+                borderRadius: 16, overflow: 'hidden',
+                cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s, border-color 0.2s',
+                backdropFilter: 'blur(10px)',
+              }}
               onMouseEnter={e => {
                 e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = '0 8px 32px rgba(127,119,221,0.18)';
+                e.currentTarget.style.boxShadow = '0 12px 40px rgba(139,111,191,0.25)';
+                e.currentTarget.style.borderColor = 'var(--border-strong)';
               }}
               onMouseLeave={e => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 2px 16px rgba(127,119,221,0.09)';
+                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.style.borderColor = 'var(--border)';
               }}>
-              <div style={{ height: 'clamp(160px, 20vw, 200px)',
-                background: 'linear-gradient(135deg, #f0eeff, #ffe4f0)',
+              {/* Product Image */}
+              <div style={{
+                height: 'clamp(160px,20vw,200px)',
+                background: 'var(--surface-2)',
                 display: 'flex', alignItems: 'center',
-                justifyContent: 'center', overflow: 'hidden',
-                position: 'relative' }}>
+                justifyContent: 'center', overflow: 'hidden', position: 'relative',
+              }}>
                 {imgSrc(p.image)
-                  ? <div style={{
-  width: '100%',
-  height: '220px',
-  overflow: 'hidden',
-  borderTopLeftRadius: '12px',
-  borderTopRightRadius: '12px'
-}}>
-  <img
-    src={imgSrc(p.image)}
-    alt={p.name}
-    style={{
-      width: '100%',
-      height: '100%',
-      objectFit: 'cover'
-    }}
-  />
-</div>
+                  ? <img src={imgSrc(p.image)} alt={p.name}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover',
+                        transition: 'transform 0.4s ease' }}
+                      onMouseEnter={e => e.target.style.transform = 'scale(1.05)'}
+                      onMouseLeave={e => e.target.style.transform = 'scale(1)'} />
                   : <span style={{ fontSize: 48 }}>🛍️</span>}
-                <span style={{ position: 'absolute', top: 10, left: 10,
-                  background: 'rgba(255,255,255,0.92)', color: '#7F77DD',
-                  fontSize: 10, fontWeight: 600, padding: '3px 8px',
-                  borderRadius: 20 }}>{p.category_name}</span>
+                <span style={{
+                  position: 'absolute', top: 10, left: 10,
+                  background: 'rgba(139,111,191,0.85)',
+                  backdropFilter: 'blur(8px)',
+                  color: '#fff', fontSize: 10, fontWeight: 700,
+                  padding: '3px 10px', borderRadius: 20,
+                }}>{p.category_name}</span>
               </div>
-              <div style={{ padding: 'clamp(12px, 2vw, 16px)' }}>
-                <h3 style={{ fontSize: 'clamp(13px, 1.8vw, 15px)', fontWeight: 600,
-                  marginBottom: 4, color: '#1a1a2e' }}>{p.name}</h3>
-                <p style={{ fontSize: 11, color: '#bbb', marginBottom: 8 }}>
+
+              {/* Product Info */}
+              <div style={{ padding: 'clamp(12px,2vw,16px)' }}>
+                <h3 style={{
+                  fontSize: 'clamp(13px,1.8vw,15px)', fontWeight: 700,
+                  marginBottom: 4, color: '#F0EAF8',
+                }}>{p.name}</h3>
+                <p style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 10 }}>
                   by {p.seller_name}
                 </p>
-                <div style={{ display: 'flex', justifyContent: 'space-between',
-                  alignItems: 'center' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
-                    <div style={{ fontWeight: 700,
-                      fontSize: 'clamp(15px, 2.5vw, 20px)',
-                      background: 'linear-gradient(135deg, #7F77DD, #D4537E)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent' }}>
+                    <div style={{
+                      fontWeight: 800, fontSize: 'clamp(15px,2.5vw,20px)',
+                      background: 'var(--grad-primary)',
+                      WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                    }}>
                       ₹{Number(p.price).toLocaleString('en-IN')}
                     </div>
-                    <p style={{ fontSize: 10, fontWeight: 500, marginTop: 2,
-                      color: p.stock < 1 ? '#E24B4A'
-                        : p.stock < 5 ? '#BA7517' : '#1D9E75' }}>
-                      {p.stock < 1 ? 'Out of stock'
-                        : p.stock < 5 ? `Only ${p.stock} left`
-                        : 'In stock'}
+                    <p style={{
+                      fontSize: 10, fontWeight: 600, marginTop: 2,
+                      color: p.stock < 1 ? '#FF8A8A' : p.stock < 5 ? '#D4A853' : '#7DEBB5',
+                    }}>
+                      {p.stock < 1 ? 'Out of stock' : p.stock < 5 ? `Only ${p.stock} left` : 'In stock'}
                     </p>
                   </div>
                   <button disabled={p.stock < 1}
                     onClick={e => { e.stopPropagation(); addToCart(p.id); }}
-                    style={{ background: p.stock < 1 ? '#eee'
-                        : 'linear-gradient(135deg, #7F77DD, #D4537E)',
-                      color: p.stock < 1 ? '#aaa' : '#fff',
-                      border: 'none', padding: 'clamp(6px, 1vw, 9px) clamp(10px, 1.5vw, 14px)',
-                      borderRadius: 10, fontSize: 'clamp(11px, 1.5vw, 13px)',
-                      fontWeight: 500, cursor: p.stock < 1 ? 'not-allowed' : 'pointer' }}>
+                    style={{
+                      background: p.stock < 1 ? 'rgba(255,255,255,0.06)' : 'var(--grad-primary)',
+                      color: p.stock < 1 ? 'var(--text-muted)' : '#fff',
+                      border: 'none',
+                      padding: 'clamp(6px,1vw,9px) clamp(10px,1.5vw,14px)',
+                      borderRadius: 10, fontSize: 'clamp(11px,1.5vw,13px)',
+                      fontWeight: 600, cursor: p.stock < 1 ? 'not-allowed' : 'pointer',
+                      transition: 'opacity 0.2s',
+                    }}>
                     {p.stock < 1 ? 'Sold Out' : '+ Cart'}
                   </button>
                 </div>
