@@ -3,7 +3,7 @@ import { useState } from 'react';
 const COURSES = [
   {
     title: 'How to Start a Small Business', icon: '🚀',
-    color: '#f0eeff', textColor: '#7F77DD', duration: '6 lessons', level: 'Beginner',
+    color: '#ffffff', textColor: '#7F77DD', duration: '6 lessons', level: 'Beginner',
     lessons: [
       {
         title: 'Identifying your business idea',
@@ -156,7 +156,7 @@ STEP 5 — Manage Orders
   },
   {
     title: 'Digital Marketing for Beginners', icon: '📱',
-    color: '#fff0f6', textColor: '#D4537E', duration: '5 lessons', level: 'Beginner',
+    color: '#ffffff', textColor: '#D4537E', duration: '5 lessons', level: 'Beginner',
     lessons: [
       {
         title: 'Introduction to social media marketing',
@@ -318,7 +318,7 @@ WHAT TO DO WHEN SOMETHING GOES WRONG:
   },
   {
     title: 'Financial Literacy for Entrepreneurs', icon: '💰',
-    color: '#fff8e6', textColor: '#BA7517', duration: '5 lessons', level: 'Intermediate',
+    color: '#ffffff', textColor: '#BA7517', duration: '5 lessons', level: 'Intermediate',
     lessons: [
       {
         title: 'Understanding profit and loss',
@@ -483,7 +483,7 @@ TIPS FOR GETTING APPROVED:
   },
   {
     title: 'Packaging & Branding Your Products', icon: '🎁',
-    color: '#eafaf3', textColor: '#0F6E56', duration: '4 lessons', level: 'Beginner',
+    color: '#ffffff', textColor: '#0F6E56', duration: '4 lessons', level: 'Beginner',
     lessons: [
       {
         title: 'Why packaging matters',
@@ -629,7 +629,7 @@ Your goal is to move every customer up this ladder.
   },
   {
     title: 'Legal Rights of Women Entrepreneurs', icon: '⚖️',
-    color: '#e6f1fb', textColor: '#185FA5', duration: '4 lessons', level: 'All Levels',
+    color: '#ffffff', textColor: '#185FA5', duration: '4 lessons', level: 'All Levels',
     lessons: [
       {
         title: 'Business structures in India',
@@ -781,7 +781,7 @@ IMPORTANT GOVERNMENT PORTALS FOR WOMEN:
   },
   {
     title: 'Shipping & Order Management', icon: '📦',
-    color: '#fef3e2', textColor: '#854F0B', duration: '4 lessons', level: 'Beginner',
+    color: '#ffffff', textColor: '#854F0B', duration: '4 lessons', level: 'Beginner',
     lessons: [
       {
         title: 'Setting up shipping on SafeHer',
