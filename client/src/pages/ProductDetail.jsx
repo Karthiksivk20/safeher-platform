@@ -385,17 +385,7 @@ export default function ProductDetail() {
                         value={address.pincode}
                         onChange={e => setAddress({ ...address, pincode: e.target.value })} />
                     </div>
-                    <button onClick={orderNow} disabled={orderLoading} style={{
-                      width: '100%',
-                      background: 'var(--grad-primary)',
-                      color: '#fff', border: 'none', padding: '12px',
-                      borderRadius: 10, fontSize: 14, fontWeight: 700,
-                      cursor: orderLoading ? 'not-allowed' : 'pointer',
-                      opacity: orderLoading ? 0.7 : 1,
-                      transition: 'all 0.2s',
-                    }}>
-                      {orderLoading ? 'Placing Order...' : 'Confirm Order 🎉'}
-                    </button>
+                   
                   </div>
                 )}
               </>
