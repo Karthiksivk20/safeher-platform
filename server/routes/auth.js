@@ -14,7 +14,7 @@ const sendOTPEmail = async (email, otp) => {
       'api-key': process.env.BREVO_API_KEY,
     },
     body: JSON.stringify({
-      sender: { name: 'SafeHer 🌸', email: 'smkarthik191025@gmail.com' },
+      sender: { name: 'SafeHer 🌸', email: 'smkarthik1910@gmail.com' },
       to: [{ email: email }],
       subject: `${otp} is your SafeHer verification code`,
       htmlContent: `
