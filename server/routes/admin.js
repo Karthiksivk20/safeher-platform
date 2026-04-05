@@ -40,14 +40,35 @@ router.delete('/products/:id', auth, isAdmin, async (req, res) => {
 });
 
 router.get('/stats', async (req, res) => {
-  const [[userCount]] = await db.query('SELECT COUNT(*) as total FROM users WHERE role != "admin"');
-  const [[sellerCount]] = await db.query('SELECT COUNT(*) as total FROM users WHERE role = "seller"');
-  const [[productCount]] = await db.query('SELECT COUNT(*) as total FROM products');
-  const [[orderCount]] = await db.query('SELECT COUNT(*) as total FROM orders');
-  const [[revenue]] = await db.query('SELECT COALESCE(SUM(total), 0) as total FROM orders');
-  const [[categoryCount]] = await db.query('SELECT COUNT(*) as total FROM categories');
-  const [[forumCount]] = await db.query('SELECT COUNT(*) as total FROM forum_posts');
-  const [[incidentCount]] = await db.query('SELECT COUNT(*) as total FROM incidents');
+  const [[userCount]] = await db.query(
+    'SELECT COUNT(*) as total FROM users WHERE role != "admin"'
+  );
+  const [[sellerCount]] = await db.query(
+    'SELECT COUNT(*) as total FROM users WHERE role = "seller"'
+  );
+  const [[productCount]] = await db.query(
+    'SELECT COUNT(*) as total FROM products'
+  );
+
+  // ✅ FIXED: exclude cancelled orders from count
+  const [[orderCount]] = await db.query(
+    'SELECT COUNT(*) as total FROM orders WHERE status != "cancelled"'
+  );
+
+  // ✅ FIXED: exclude cancelled orders from revenue
+  const [[revenue]] = await db.query(
+    'SELECT COALESCE(SUM(total), 0) as total FROM orders WHERE status != "cancelled"'
+  );
+
+  const [[categoryCount]] = await db.query(
+    'SELECT COUNT(*) as total FROM categories'
+  );
+  const [[forumCount]] = await db.query(
+    'SELECT COUNT(*) as total FROM forum_posts'
+  );
+  const [[incidentCount]] = await db.query(
+    'SELECT COUNT(*) as total FROM incidents'
+  );
 
   res.json({
     users: userCount.total,
@@ -60,7 +81,6 @@ router.get('/stats', async (req, res) => {
     incidents: incidentCount.total,
   });
 });
-
 
 router.delete('/users/:id', auth, isAdmin, async (req, res) => {
   try {
@@ -106,6 +126,5 @@ router.delete('/users/:id', auth, isAdmin, async (req, res) => {
     res.status(500).json({ message: 'Could not remove user: ' + err.message });
   }
 });
-
 
 module.exports = router;
