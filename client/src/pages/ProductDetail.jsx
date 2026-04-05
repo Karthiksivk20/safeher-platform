@@ -334,60 +334,8 @@ export default function ProductDetail() {
                     }}>
                     🛒 Add to Cart
                   </button>
-                  <button onClick={() => setShowOrderForm(!showOrderForm)} style={{
-                    flex: 1, minWidth: 130,
-                    background: 'var(--grad-primary)',
-                    color: '#fff', border: 'none', padding: '14px',
-                    borderRadius: 12, fontSize: 14, fontWeight: 700,
-                    cursor: 'pointer',
-                    boxShadow: '0 6px 20px rgba(139,111,191,0.35)',
-                    transition: 'all 0.2s',
-                  }}
-                    onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-1px)'}
-                    onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
-                    ⚡ Order Now
-                  </button>
+                
                 </div>
-
-                {/* Order Form */}
-                {showOrderForm && (
-                  <div style={{
-                    background: 'rgba(255,255,255,0.04)',
-                    borderRadius: 14, padding: 16,
-                    border: '1.5px solid var(--border-strong)',
-                    marginBottom: 16,
-                    animation: 'slideDown 0.3s ease',
-                  }}>
-                    <label style={{
-                      fontSize: 13, fontWeight: 600,
-                      color: 'var(--text-muted)', display: 'block', marginBottom: 10,
-                    }}>Delivery Details</label>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 8 }}>
-                      <input placeholder="Recipient Name *"
-                        value={address.name}
-                        onChange={e => setAddress({ ...address, name: e.target.value })} />
-                      <input placeholder="Phone Number *" type="tel"
-                        value={address.phone}
-                        onChange={e => setAddress({ ...address, phone: e.target.value })} />
-                    </div>
-                    <input placeholder="Flat / House No / Street *"
-                      value={address.flat}
-                      onChange={e => setAddress({ ...address, flat: e.target.value })}
-                      style={{ marginBottom: 8 }} />
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginBottom: 10 }}>
-                      <input placeholder="City *"
-                        value={address.city}
-                        onChange={e => setAddress({ ...address, city: e.target.value })} />
-                      <input placeholder="State *"
-                        value={address.state}
-                        onChange={e => setAddress({ ...address, state: e.target.value })} />
-                      <input placeholder="Pincode *"
-                        value={address.pincode}
-                        onChange={e => setAddress({ ...address, pincode: e.target.value })} />
-                    </div>
-                   
-                  </div>
-                )}
               </>
             )}
 
