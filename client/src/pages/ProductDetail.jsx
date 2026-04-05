@@ -90,26 +90,7 @@ export default function ProductDetail() {
     }
   };
 
-  const orderNow = async () => {
-    if (!user) return showToast('Please login to order');
-    if (!address.name || !address.phone || !address.flat ||
-      !address.city || !address.state || !address.pincode)
-      return showToast('Please fill in all delivery details');
-    setOrderLoading(true);
-    try {
-      await axios.post(`${API}/api/cart/add`,
-        { product_id: id, quantity }, token());
-      const fullAddress = `${address.name}, ${address.phone} | ${address.flat}, ${address.city}, ${address.state} - ${address.pincode}`;
-      await axios.post(`${API}/api/orders/place`,
-        { address: fullAddress }, token());
-      showToast('Order placed successfully! 🎉');
-      setTimeout(() => navigate('/orders'), 1500);
-    } catch {
-      showToast('Something went wrong');
-    } finally {
-      setOrderLoading(false);
-    }
-  };
+ 
 
   if (loading) return (
     <div style={{
