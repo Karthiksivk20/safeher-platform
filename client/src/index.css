@@ -5,31 +5,31 @@
 }
 
 :root {
-  --primary: #6B4FA0;
-  --primary-light: #8B6FBF;
-  --accent: #E8763A;
-  --accent-light: #F4A066;
+  --primary: #8B6FBF;
+  --primary-light: #A98FD8;
+  --accent: #C4587A;
+  --accent-light: #D4789A;
   --rose: #C4587A;
   --gold: #D4A853;
-  --surface: #FDFAF6;
-  --surface-2: #F5F0E8;
-  --surface-3: #EDE6D6;
-  --text-primary: #1C1410;
-  --text-secondary: #5C4F3D;
-  --text-muted: #9B8E7E;
-  --border: rgba(107, 79, 160, 0.12);
-  --border-strong: rgba(107, 79, 160, 0.25);
-  --shadow-sm: 0 1px 3px rgba(28,20,16,0.06), 0 1px 2px rgba(28,20,16,0.04);
-  --shadow-md: 0 4px 16px rgba(28,20,16,0.08), 0 2px 4px rgba(28,20,16,0.04);
-  --shadow-lg: 0 12px 40px rgba(28,20,16,0.12), 0 4px 12px rgba(28,20,16,0.06);
-  --shadow-xl: 0 24px 64px rgba(28,20,16,0.16), 0 8px 24px rgba(28,20,16,0.08);
+  --surface: #140C1E;
+  --surface-2: #1E1230;
+  --surface-3: #2D1040;
+  --text-primary: #F0EAF8;
+  --text-secondary: #C4B8D8;
+  --text-muted: #8A7AA0;
+  --border: rgba(139, 111, 191, 0.15);
+  --border-strong: rgba(139, 111, 191, 0.3);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.2);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3);
+  --shadow-xl: 0 24px 64px rgba(0,0,0,0.6), 0 8px 24px rgba(0,0,0,0.4);
   --radius-sm: 8px;
   --radius-md: 14px;
   --radius-lg: 20px;
   --radius-xl: 28px;
-  --gradient-primary: linear-gradient(135deg, #6B4FA0 0%, #C4587A 100%);
-  --gradient-accent: linear-gradient(135deg, #E8763A 0%, #D4A853 100%);
-  --gradient-surface: linear-gradient(135deg, #FDFAF6 0%, #F5F0E8 100%);
+  --gradient-primary: linear-gradient(135deg, #8B6FBF 0%, #C4587A 100%);
+  --gradient-accent: linear-gradient(135deg, #C4587A 0%, #D4A853 100%);
+  --gradient-surface: linear-gradient(135deg, #140C1E 0%, #2D1040 50%, #1A0A28 100%);
 }
 
 html { font-size: 16px; scroll-behavior: smooth; }
@@ -49,8 +49,8 @@ body::before {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(107,79,160,0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 110%, rgba(196,88,122,0.05) 0%, transparent 60%);
+    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(107,79,160,0.25) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 110%, rgba(196,88,122,0.2) 0%, transparent 60%);
   pointer-events: none;
   z-index: 0;
 }
@@ -69,15 +69,15 @@ input, textarea, select {
   font-size: 14px;
   font-family: inherit;
   outline: none;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.07);
   color: var(--text-primary);
   transition: all 0.2s ease;
 }
 
 input:focus, textarea:focus, select:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(107,79,160,0.1);
-  background: #fff;
+  box-shadow: 0 0 0 3px rgba(139, 111, 191, 0.15);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 input::placeholder, textarea::placeholder {
@@ -86,7 +86,7 @@ input::placeholder, textarea::placeholder {
 
 select {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239B8E7E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A7AA0' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 14px center;
   padding-right: 36px;
@@ -94,7 +94,7 @@ select {
 
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: var(--surface-2); }
-::-webkit-scrollbar-thumb { background: #C4B8A8; border-radius: 10px; }
+::-webkit-scrollbar-thumb { background: #4A3570; border-radius: 10px; }
 
 /* Animations */
 @keyframes fadeUp {
@@ -156,16 +156,18 @@ select {
 
 /* Cards */
 .card {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.05);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
   box-shadow: var(--shadow-sm);
   transition: box-shadow 0.3s ease, transform 0.3s ease;
+  backdrop-filter: blur(10px);
 }
 
 .card:hover {
   box-shadow: var(--shadow-lg);
   transform: translateY(-3px);
+  border-color: var(--border-strong);
 }
 
 /* Product card image fix */
