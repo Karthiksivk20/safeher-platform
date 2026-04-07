@@ -87,16 +87,29 @@ export default function Home() {
   const categoryColors = ['#C4A8E8', '#F0A0C0', '#D4A853', '#7DEBB5', '#7AB8F5', '#E8A060'];
 
   return (
-    <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 clamp(12px,3vw,24px) 80px' }}>
+    <div style={{ 
+      width: '100%', 
+      maxWidth: '1200px', 
+      margin: '0 auto', 
+      padding: '0 clamp(12px, 4vw, 24px) 80px',
+      boxSizing: 'border-box'
+    }}>
 
       {/* Toast */}
       {toast && (
         <div style={{
-          position: 'fixed', top: 80, right: 16, left: 16,
-          maxWidth: 300, marginLeft: 'auto',
-          background: 'rgba(45,155,111,0.95)', color: '#fff',
-          padding: '12px 20px', borderRadius: 10,
-          fontSize: 14, fontWeight: 500, zIndex: 999,
+          position: 'fixed', 
+          top: 80, 
+          right: 'max(16px, 5vw)', 
+          left: 'auto',
+          width: 'min(300px, 85vw)',
+          background: 'rgba(45,155,111,0.95)', 
+          color: '#fff',
+          padding: '12px 20px', 
+          borderRadius: 10,
+          fontSize: 'clamp(12px, 3vw, 14px)', 
+          fontWeight: 500, 
+          zIndex: 999,
           boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
           animation: 'slideDown 0.3s ease',
         }}>
@@ -109,61 +122,69 @@ export default function Home() {
           {/* Hero */}
           <div style={{
             background: 'var(--grad-primary)',
-            borderRadius: 'clamp(12px,2vw,24px)',
-            padding: 'clamp(24px,4vw,56px) clamp(20px,4vw,48px)',
-            marginTop: 'clamp(16px,3vw,32px)',
-            marginBottom: 'clamp(24px,4vw,48px)',
-            color: '#fff', position: 'relative', overflow: 'hidden',
+            borderRadius: 'clamp(12px, 3vw, 24px)',
+            padding: 'clamp(20px, 6vw, 56px) clamp(16px, 5vw, 48px)',
+            marginTop: 'clamp(16px, 4vw, 32px)',
+            marginBottom: 'clamp(24px, 5vw, 48px)',
+            color: '#fff', 
+            position: 'relative', 
+            overflow: 'hidden',
+            width: '100%',
+            boxSizing: 'border-box'
           }}>
             <div style={{ position: 'absolute', top: -60, right: -60,
               width: 280, height: 280, borderRadius: '50%',
               background: 'rgba(255,255,255,0.07)' }} />
             <div style={{ position: 'absolute', top: 20, right: 48,
-              fontSize: 'clamp(40px,8vw,80px)', opacity: 0.15 }}>🌸</div>
-            <p style={{ fontSize: 'clamp(10px,1.5vw,12px)', fontWeight: 700,
+              fontSize: 'clamp(40px, 10vw, 80px)', opacity: 0.15 }}>🌸</div>
+            <p style={{ fontSize: 'clamp(10px, 2vw, 12px)', fontWeight: 700,
               opacity: 0.8, letterSpacing: 2, textTransform: 'uppercase',
               marginBottom: 14 }}>
               SDG 5 — Gender Equality
             </p>
             <h1 style={{ fontFamily: 'Cormorant Garamond, serif',
-              fontSize: 'clamp(22px,4vw,46px)', fontWeight: 700,
-              lineHeight: 1.2, marginBottom: 16, maxWidth: 560, color: '#fff' }}>
-              Empowering Women<br />Entrepreneurs Across India
+              fontSize: 'clamp(20px, 6vw, 46px)', fontWeight: 700,
+              lineHeight: 1.2, marginBottom: 16, maxWidth: '100%', 
+              width: '100%', color: '#fff' }}>
+              Empowering Women Entrepreneurs Across India
             </h1>
-            <p style={{ opacity: 0.9, fontSize: 'clamp(13px,2vw,16px)',
-              maxWidth: 480, lineHeight: 1.7, marginBottom: 28 }}>
+            <p style={{ opacity: 0.9, fontSize: 'clamp(12px, 2.5vw, 16px)',
+              maxWidth: '100%', width: '100%', lineHeight: 1.7, marginBottom: 28 }}>
               Discover handcrafted products, support women-led businesses,
               and be part of a movement that's changing lives.
             </p>
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
               <button onClick={() => window.scrollTo({ top: 600, behavior: 'smooth' })}
                 style={{ background: '#fff', color: '#8B6FBF',
-                  padding: 'clamp(10px,2vw,13px) clamp(16px,3vw,28px)',
+                  padding: 'clamp(10px, 2.5vw, 13px) clamp(16px, 4vw, 28px)',
                   borderRadius: 12, fontWeight: 700,
-                  fontSize: 'clamp(12px,1.5vw,14px)', border: 'none', cursor: 'pointer',
+                  fontSize: 'clamp(12px, 2vw, 14px)', border: 'none', cursor: 'pointer',
                   boxShadow: '0 4px 16px rgba(0,0,0,0.2)' }}>
                 Shop Now 🛍️
               </button>
               <Link to="/stories" style={{
                 background: 'rgba(255,255,255,0.15)', color: '#fff',
-                padding: 'clamp(10px,2vw,13px) clamp(16px,3vw,28px)',
+                padding: 'clamp(10px, 2.5vw, 13px) clamp(16px, 4vw, 28px)',
                 borderRadius: 12, fontWeight: 700,
-                fontSize: 'clamp(12px,1.5vw,14px)',
-                border: '1.5px solid rgba(255,255,255,0.35)' }}>
+                fontSize: 'clamp(12px, 2vw, 14px)',
+                border: '1.5px solid rgba(255,255,255,0.35)',
+                textDecoration: 'none'
+              }}>
                 Read Stories ⭐
               </Link>
             </div>
           </div>
 
           {/* Stats — full width, 4 equal columns */}
-          <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: 13, marginBottom: 16 }}>
+          <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: 'clamp(11px, 2.5vw, 13px)', marginBottom: 16 }}>
             Live platform stats — updated in real time
           </p>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',   // ✅ always 4 equal columns
-            gap: 'clamp(8px,2vw,16px)',
-            marginBottom: 'clamp(24px,4vw,56px)',
+            gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+            gap: 'clamp(6px, 2vw, 16px)',
+            marginBottom: 'clamp(24px, 5vw, 56px)',
+            width: '100%'
           }}>
             {[
               { icon: '👩‍💼', value: stats.sellers, label: 'Women Sellers' },
@@ -174,17 +195,23 @@ export default function Home() {
               <div key={s.label} style={{
                 background: 'rgba(255,255,255,0.05)',
                 border: '1px solid var(--border-strong)',
-                borderRadius: 16, padding: 'clamp(14px,2vw,24px)',
-                textAlign: 'center', backdropFilter: 'blur(10px)',
+                borderRadius: 'clamp(10px, 2vw, 16px)', 
+                padding: 'clamp(10px, 2vw, 24px)',
+                textAlign: 'center', 
+                backdropFilter: 'blur(10px)',
+                minWidth: 0
               }}>
-                <div style={{ fontSize: 'clamp(24px,4vw,32px)', marginBottom: 10 }}>{s.icon}</div>
+                <div style={{ fontSize: 'clamp(20px, 5vw, 32px)', marginBottom: 8 }}>{s.icon}</div>
                 <div style={{
-                  fontSize: 'clamp(20px,3vw,28px)', fontWeight: 800,
+                  fontSize: 'clamp(16px, 4vw, 28px)', 
+                  fontWeight: 800,
                   background: 'var(--grad-primary)',
-                  WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                  WebkitBackgroundClip: 'text', 
+                  WebkitTextFillColor: 'transparent',
                   marginBottom: 4,
+                  wordBreak: 'break-word'
                 }}>{s.value}</div>
-                <div style={{ fontSize: 'clamp(11px,1.5vw,13px)', color: 'var(--text-muted)' }}>
+                <div style={{ fontSize: 'clamp(9px, 2vw, 13px)', color: 'var(--text-muted)' }}>
                   {s.label}
                 </div>
               </div>
@@ -192,16 +219,19 @@ export default function Home() {
           </div>
 
           {/* Categories — full width */}
-          <div style={{ marginBottom: 'clamp(24px,4vw,56px)' }}>
+          <div style={{ marginBottom: 'clamp(24px, 5vw, 56px)', width: '100%' }}>
             <h2 style={{
               fontFamily: 'Cormorant Garamond, serif',
-              fontSize: 'clamp(18px,3vw,26px)', fontWeight: 700,
-              color: '#F0EAF8', marginBottom: 20,
+              fontSize: 'clamp(18px, 4vw, 26px)', 
+              fontWeight: 700,
+              color: '#F0EAF8', 
+              marginBottom: 20,
             }}>Shop by Category</h2>
             <div style={{
               display: 'grid',
-              gridTemplateColumns: `repeat(${categories.length || 6}, 1fr)`,  // ✅ stretch all categories equally
-              gap: 'clamp(8px,2vw,14px)',
+              gridTemplateColumns: `repeat(${Math.min(categories.length || 6, 6)}, minmax(0, 1fr))`,
+              gap: 'clamp(6px, 2vw, 14px)',
+              width: '100%'
             }}>
               {categories.map((c, i) => (
                 <div key={c.id}
@@ -213,19 +243,23 @@ export default function Home() {
                     border: `2px solid ${String(category) === String(c.id)
                       ? categoryColors[i % categoryColors.length]
                       : 'rgba(255,255,255,0.08)'}`,
-                    borderRadius: 14,
-                    padding: 'clamp(12px,2vw,22px) 8px',
-                    textAlign: 'center', cursor: 'pointer',
+                    borderRadius: 'clamp(10px, 2vw, 14px)',
+                    padding: 'clamp(8px, 2vw, 22px) clamp(4px, 1vw, 8px)',
+                    textAlign: 'center', 
+                    cursor: 'pointer',
                     transition: 'transform 0.2s, border-color 0.2s',
+                    minWidth: 0
                   }}
                   onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-3px)'}
                   onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
-                  <div style={{ fontSize: 'clamp(20px,3vw,30px)', marginBottom: 8 }}>
+                  <div style={{ fontSize: 'clamp(18px, 4vw, 30px)', marginBottom: 6 }}>
                     {categoryEmojis[i % categoryEmojis.length]}
                   </div>
                   <div style={{
-                    fontSize: 'clamp(10px,1.2vw,13px)', fontWeight: 700,
+                    fontSize: 'clamp(9px, 1.8vw, 13px)', 
+                    fontWeight: 700,
                     color: categoryColors[i % categoryColors.length],
+                    wordBreak: 'break-word'
                   }}>
                     {c.name}
                   </div>
@@ -235,29 +269,33 @@ export default function Home() {
           </div>
 
           {/* Featured Entrepreneurs — full width 3 columns */}
-          <div style={{ marginBottom: 'clamp(24px,4vw,56px)' }}>
+          <div style={{ marginBottom: 'clamp(24px, 5vw, 56px)', width: '100%' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between',
               alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 8 }}>
               <h2 style={{
                 fontFamily: 'Cormorant Garamond, serif',
-                fontSize: 'clamp(18px,3vw,26px)', fontWeight: 700, color: '#F0EAF8',
+                fontSize: 'clamp(18px, 4vw, 26px)', 
+                fontWeight: 700, 
+                color: '#F0EAF8',
               }}>
                 Featured Entrepreneurs
               </h2>
-              <Link to="/stories" style={{ fontSize: 13, color: 'var(--primary)', fontWeight: 600 }}>
+              <Link to="/stories" style={{ fontSize: 'clamp(11px, 2.5vw, 13px)', color: 'var(--primary)', fontWeight: 600, textDecoration: 'none' }}>
                 View all →
               </Link>
             </div>
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',   // ✅ always 3 equal columns
-              gap: 20,
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))',
+              gap: 'clamp(12px, 3vw, 20px)',
+              width: '100%'
             }}>
               {FEATURED_ENTREPRENEURS.map((e, i) => (
                 <div key={e.name} style={{
                   background: 'rgba(255,255,255,0.05)',
                   border: '1px solid var(--border-strong)',
-                  borderRadius: 16, padding: 24,
+                  borderRadius: 'clamp(12px, 2vw, 16px)', 
+                  padding: 'clamp(16px, 3vw, 24px)',
                   backdropFilter: 'blur(10px)',
                   transition: 'transform 0.2s, border-color 0.2s',
                 }}
@@ -269,24 +307,28 @@ export default function Home() {
                     e2.currentTarget.style.transform = 'translateY(0)';
                     e2.currentTarget.style.borderColor = 'var(--border-strong)';
                   }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 14 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 14, flexWrap: 'wrap' }}>
                     <div style={{
-                      width: 52, height: 52, borderRadius: '50%',
+                      width: 'clamp(44px, 8vw, 52px)', 
+                      height: 'clamp(44px, 8vw, 52px)', 
+                      borderRadius: '50%',
                       background: categoryGradients[i % categoryGradients.length],
                       border: `2px solid ${categoryColors[i % categoryColors.length]}`,
                       display: 'flex', alignItems: 'center',
-                      justifyContent: 'center', fontSize: 24, flexShrink: 0,
+                      justifyContent: 'center', 
+                      fontSize: 'clamp(20px, 4vw, 24px)', 
+                      flexShrink: 0,
                     }}>
                       {e.emoji}
                     </div>
-                    <div>
-                      <p style={{ fontWeight: 700, fontSize: 15, color: '#F0EAF8' }}>{e.name}</p>
-                      <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <p style={{ fontWeight: 700, fontSize: 'clamp(13px, 2.5vw, 15px)', color: '#F0EAF8' }}>{e.name}</p>
+                      <p style={{ fontSize: 'clamp(10px, 2vw, 12px)', color: 'var(--text-muted)' }}>
                         {e.city} · {e.category}
                       </p>
                     </div>
                   </div>
-                  <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.7 }}>
+                  <p style={{ fontSize: 'clamp(11px, 2.5vw, 13px)', color: 'var(--text-secondary)', lineHeight: 1.7 }}>
                     {e.story}
                   </p>
                 </div>
@@ -301,14 +343,21 @@ export default function Home() {
         background: 'rgba(255,255,255,0.05)',
         backdropFilter: 'blur(16px)',
         border: '1px solid var(--border-strong)',
-        borderRadius: 14, padding: 'clamp(10px,2vw,16px)',
-        marginBottom: 28, display: 'flex', gap: 10, flexWrap: 'wrap',
+        borderRadius: 'clamp(10px, 2vw, 14px)', 
+        padding: 'clamp(10px, 2vw, 16px)',
+        marginBottom: 28, 
+        display: 'flex', 
+        gap: 'clamp(8px, 2vw, 10px)', 
+        flexWrap: 'wrap',
+        width: '100%',
+        boxSizing: 'border-box'
       }}>
         <input placeholder="🔍  Search products..."
-          style={{ flex: 1, minWidth: 150 }} value={search}
+          style={{ flex: '1 1 150px', minWidth: '120px', padding: '8px 12px' }} 
+          value={search}
           onChange={e => setSearch(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && load(search, category, priceRange.min, priceRange.max)} />
-        <select style={{ width: 'clamp(130px,20vw,180px)' }} value={category}
+        <select style={{ width: 'clamp(120px, 25vw, 180px)', padding: '8px 12px' }} value={category}
           onChange={e => { setCategory(e.target.value); load(search, e.target.value, priceRange.min, priceRange.max); }}>
           <option value="">All Categories</option>
           {categories.map(c => (
@@ -316,23 +365,33 @@ export default function Home() {
           ))}
         </select>
         <input placeholder="Min ₹" type="number"
-          style={{ width: 80 }} value={priceRange.min}
+          style={{ width: 'clamp(70px, 15vw, 80px)', padding: '8px 12px' }} 
+          value={priceRange.min}
           onChange={e => setPriceRange({ ...priceRange, min: e.target.value })} />
         <input placeholder="Max ₹" type="number"
-          style={{ width: 80 }} value={priceRange.max}
+          style={{ width: 'clamp(70px, 15vw, 80px)', padding: '8px 12px' }} 
+          value={priceRange.max}
           onChange={e => setPriceRange({ ...priceRange, max: e.target.value })} />
         <button onClick={() => load(search, category, priceRange.min, priceRange.max)} style={{
-          background: 'var(--grad-primary)', color: '#fff', border: 'none',
-          padding: '11px clamp(14px,2vw,24px)', borderRadius: 10,
-          fontWeight: 700, fontSize: 14, cursor: 'pointer',
+          background: 'var(--grad-primary)', 
+          color: '#fff', 
+          border: 'none',
+          padding: '8px clamp(14px, 3vw, 24px)', 
+          borderRadius: 10,
+          fontWeight: 700, 
+          fontSize: 'clamp(12px, 2vw, 14px)', 
+          cursor: 'pointer',
         }}>Search</button>
         {isFiltered && (
           <button onClick={() => { setSearch(''); setCategory(''); setPriceRange({ min: '', max: '' }); load('', '', '', ''); }}
             style={{
               background: 'rgba(255,255,255,0.06)',
               border: '1.5px solid var(--border)',
-              color: 'var(--text-muted)', padding: '10px 14px',
-              borderRadius: 10, fontSize: 13, cursor: 'pointer',
+              color: 'var(--text-muted)', 
+              padding: '8px 14px',
+              borderRadius: 10, 
+              fontSize: 'clamp(11px, 2vw, 13px)', 
+              cursor: 'pointer',
             }}>
             Clear ✕
           </button>
@@ -344,7 +403,9 @@ export default function Home() {
         alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 8 }}>
         <h2 style={{
           fontFamily: 'Cormorant Garamond, serif',
-          fontSize: 'clamp(16px,2.5vw,24px)', fontWeight: 700, color: '#F0EAF8',
+          fontSize: 'clamp(16px, 3.5vw, 24px)', 
+          fontWeight: 700, 
+          color: '#F0EAF8',
         }}>
           {category
             ? `${categories.find(c => String(c.id) === String(category))?.name || 'Category'} (${products.length})`
@@ -357,8 +418,12 @@ export default function Home() {
             style={{
               background: 'rgba(139,111,191,0.1)',
               border: '1.5px solid var(--border-strong)',
-              color: '#C4A8E8', padding: '8px 14px',
-              borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: 'pointer',
+              color: '#C4A8E8', 
+              padding: '6px 12px',
+              borderRadius: 10, 
+              fontSize: 'clamp(11px, 2vw, 13px)', 
+              fontWeight: 600, 
+              cursor: 'pointer',
             }}>
             ✕ Clear Filter
           </button>
@@ -367,46 +432,54 @@ export default function Home() {
 
       {/* Products Grid */}
       {loading ? (
-        <div>
+        <div style={{ width: '100%' }}>
           <div style={{
-            textAlign: 'center', padding: '16px 20px',
+            textAlign: 'center', 
+            padding: 'clamp(12px, 3vw, 16px) clamp(16px, 4vw, 20px)',
             background: 'rgba(212,168,83,0.1)',
-            borderRadius: 12, marginBottom: 20,
+            borderRadius: 12, 
+            marginBottom: 20,
             border: '1px solid rgba(212,168,83,0.3)',
           }}>
-            <p style={{ fontSize: 14, color: '#D4A853', fontWeight: 600 }}>
+            <p style={{ fontSize: 'clamp(12px, 2.5vw, 14px)', color: '#D4A853', fontWeight: 600 }}>
               ⏳ Server is waking up... Products will load in 20-30 seconds.
             </p>
-            <p style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>
+            <p style={{ fontSize: 'clamp(10px, 2vw, 12px)', color: 'var(--text-muted)', marginTop: 4 }}>
               This only happens on the first visit. Subsequent loads are instant.
             </p>
           </div>
           <div style={{ display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(220px,1fr))', gap: 20 }}>
+            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 200px), 1fr))', 
+            gap: 'clamp(12px, 3vw, 20px)' }}>
             {[1,2,3,4,5,6].map(i => (
-              <div key={i} className="skeleton" style={{ borderRadius: 16, height: 280 }} />
+              <div key={i} className="skeleton" style={{ borderRadius: 16, height: 'clamp(240px, 40vw, 280px)' }} />
             ))}
           </div>
         </div>
       ) : products.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '60px 0' }}>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>🛍️</div>
-          <p style={{ fontSize: 15, color: 'var(--text-muted)' }}>No products found.</p>
+        <div style={{ textAlign: 'center', padding: 'clamp(40px, 10vw, 60px) 0', width: '100%' }}>
+          <div style={{ fontSize: 'clamp(36px, 8vw, 48px)', marginBottom: 16 }}>🛍️</div>
+          <p style={{ fontSize: 'clamp(13px, 2.5vw, 15px)', color: 'var(--text-muted)' }}>No products found.</p>
         </div>
       ) : (
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(220px,1fr))',
-          gap: 20,
+          gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 200px), 1fr))',
+          gap: 'clamp(12px, 3vw, 20px)',
+          width: '100%'
         }}>
           {products.map(p => (
             <div key={p.id} onClick={() => navigate(`/product/${p.id}`)}
               style={{
                 background: 'rgba(255,255,255,0.05)',
                 border: '1px solid var(--border)',
-                borderRadius: 16, overflow: 'hidden',
-                cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s, border-color 0.2s',
-                backdropFilter: 'blur(10px)', position: 'relative',
+                borderRadius: 16, 
+                overflow: 'hidden',
+                cursor: 'pointer', 
+                transition: 'transform 0.2s, box-shadow 0.2s, border-color 0.2s',
+                backdropFilter: 'blur(10px)', 
+                position: 'relative',
+                minWidth: 0
               }}
               onMouseEnter={e => {
                 e.currentTarget.style.transform = 'translateY(-4px)';
@@ -423,13 +496,22 @@ export default function Home() {
               <button
                 onClick={e => toggleSave(e, p.id)}
                 style={{
-                  position: 'absolute', top: 10, right: 10, zIndex: 10,
-                  width: 32, height: 32, borderRadius: '50%',
+                  position: 'absolute', 
+                  top: 'clamp(6px, 2vw, 10px)', 
+                  right: 'clamp(6px, 2vw, 10px)', 
+                  zIndex: 10,
+                  width: 'clamp(28px, 5vw, 32px)', 
+                  height: 'clamp(28px, 5vw, 32px)', 
+                  borderRadius: '50%',
                   background: isSaved(p.id)
                     ? 'rgba(196,88,122,0.9)' : 'rgba(255,255,255,0.85)',
                   backdropFilter: 'blur(8px)',
-                  border: 'none', fontSize: 14, cursor: 'pointer',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  border: 'none', 
+                  fontSize: 'clamp(12px, 2.5vw, 14px)', 
+                  cursor: 'pointer',
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
                   transition: 'all 0.2s',
                   boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
                 }}>
@@ -438,10 +520,13 @@ export default function Home() {
 
               {/* Product Image */}
               <div style={{
-                height: 'clamp(160px,20vw,200px)',
+                height: 'clamp(140px, 30vw, 200px)',
                 background: 'var(--surface-2)',
-                display: 'flex', alignItems: 'center',
-                justifyContent: 'center', overflow: 'hidden', position: 'relative',
+                display: 'flex', 
+                alignItems: 'center',
+                justifyContent: 'center', 
+                overflow: 'hidden', 
+                position: 'relative',
               }}>
                 {imgSrc(p.image)
                   ? <img src={imgSrc(p.image)} alt={p.name}
@@ -449,36 +534,48 @@ export default function Home() {
                         transition: 'transform 0.4s ease' }}
                       onMouseEnter={e => e.target.style.transform = 'scale(1.05)'}
                       onMouseLeave={e => e.target.style.transform = 'scale(1)'} />
-                  : <span style={{ fontSize: 48 }}>🛍️</span>}
+                  : <span style={{ fontSize: 'clamp(32px, 8vw, 48px)' }}>🛍️</span>}
                 <span style={{
-                  position: 'absolute', top: 10, left: 10,
+                  position: 'absolute', 
+                  top: 'clamp(6px, 2vw, 10px)', 
+                  left: 'clamp(6px, 2vw, 10px)',
                   background: 'rgba(139,111,191,0.85)',
                   backdropFilter: 'blur(8px)',
-                  color: '#fff', fontSize: 10, fontWeight: 700,
-                  padding: '3px 10px', borderRadius: 20,
+                  color: '#fff', 
+                  fontSize: 'clamp(9px, 2vw, 10px)', 
+                  fontWeight: 700,
+                  padding: '2px 8px', 
+                  borderRadius: 20,
                 }}>{p.category_name}</span>
               </div>
 
               {/* Product Info */}
-              <div style={{ padding: 'clamp(12px,2vw,16px)' }}>
+              <div style={{ padding: 'clamp(10px, 2.5vw, 16px)' }}>
                 <h3 style={{
-                  fontSize: 'clamp(13px,1.8vw,15px)', fontWeight: 700,
-                  marginBottom: 4, color: '#F0EAF8',
+                  fontSize: 'clamp(12px, 2.5vw, 15px)', 
+                  fontWeight: 700,
+                  marginBottom: 4, 
+                  color: '#F0EAF8',
+                  wordBreak: 'break-word'
                 }}>{p.name}</h3>
-                <p style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 10 }}>
+                <p style={{ fontSize: 'clamp(9px, 2vw, 11px)', color: 'var(--text-muted)', marginBottom: 10 }}>
                   by {p.seller_name}
                 </p>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                   <div>
                     <div style={{
-                      fontWeight: 800, fontSize: 'clamp(15px,2.5vw,20px)',
+                      fontWeight: 800, 
+                      fontSize: 'clamp(14px, 3vw, 20px)',
                       background: 'var(--grad-primary)',
-                      WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                      WebkitBackgroundClip: 'text', 
+                      WebkitTextFillColor: 'transparent',
                     }}>
                       ₹{Number(p.price).toLocaleString('en-IN')}
                     </div>
                     <p style={{
-                      fontSize: 10, fontWeight: 600, marginTop: 2,
+                      fontSize: 'clamp(9px, 2vw, 10px)', 
+                      fontWeight: 600, 
+                      marginTop: 2,
                       color: p.stock < 1 ? '#FF8A8A' : p.stock < 5 ? '#D4A853' : '#7DEBB5',
                     }}>
                       {p.stock < 1 ? 'Out of stock' : p.stock < 5 ? `Only ${p.stock} left` : 'In stock'}
@@ -490,10 +587,13 @@ export default function Home() {
                       background: p.stock < 1 ? 'rgba(255,255,255,0.06)' : 'var(--grad-primary)',
                       color: p.stock < 1 ? 'var(--text-muted)' : '#fff',
                       border: 'none',
-                      padding: 'clamp(6px,1vw,9px) clamp(10px,1.5vw,14px)',
-                      borderRadius: 10, fontSize: 'clamp(11px,1.5vw,13px)',
-                      fontWeight: 600, cursor: p.stock < 1 ? 'not-allowed' : 'pointer',
+                      padding: 'clamp(6px, 1.5vw, 9px) clamp(8px, 2vw, 14px)',
+                      borderRadius: 10, 
+                      fontSize: 'clamp(10px, 2vw, 13px)',
+                      fontWeight: 600, 
+                      cursor: p.stock < 1 ? 'not-allowed' : 'pointer',
                       transition: 'opacity 0.2s',
+                      whiteSpace: 'nowrap'
                     }}>
                     {p.stock < 1 ? 'Sold Out' : '+ Cart'}
                   </button>
