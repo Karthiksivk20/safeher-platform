@@ -22,6 +22,7 @@ import SellerOrders from './pages/SellerOrders';
 import ProductDetail from './pages/ProductDetail';
 import Profile from './pages/Profile';
 import SellerAnalytics from './pages/SellerAnalytics';
+import SavedItems from './pages/SavedItems';
 
 const API = 'https://safeher-backend-uyzs.onrender.com';
 
@@ -641,7 +642,7 @@ function AppRoutes() {
         <Route path="/about" element={<About />} />
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/saved" element={<ComingSoon title="Saved Items" icon="❤️" />} />
+        <Route path="/saved" element={<SavedItems />} />
       </Routes>
     </>
   );

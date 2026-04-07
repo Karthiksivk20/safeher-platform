@@ -29,6 +29,21 @@ export default function Home() {
 
   const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 2500); };
 
+  // Save functions
+  const toggleSave = (e, id) => {
+    e.stopPropagation();
+    const stored = JSON.parse(localStorage.getItem('savedItems') || '[]');
+    const isSaved = stored.includes(id);
+    const updated = isSaved ? stored.filter(i => i !== id) : [...stored, id];
+    localStorage.setItem('savedItems', JSON.stringify(updated));
+    showToast(isSaved ? 'Removed from saved items' : 'Saved! ❤️');
+  };
+
+  const isSaved = (id) => {
+    const stored = JSON.parse(localStorage.getItem('savedItems') || '[]');
+    return stored.includes(id);
+  };
+
   const load = async (s, c, min, max) => {
     setLoading(true);
     try {
@@ -391,7 +406,7 @@ export default function Home() {
                 border: '1px solid var(--border)',
                 borderRadius: 16, overflow: 'hidden',
                 cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s, border-color 0.2s',
-                backdropFilter: 'blur(10px)',
+                backdropFilter: 'blur(10px)', position: 'relative',
               }}
               onMouseEnter={e => {
                 e.currentTarget.style.transform = 'translateY(-4px)';
@@ -403,6 +418,24 @@ export default function Home() {
                 e.currentTarget.style.boxShadow = 'none';
                 e.currentTarget.style.borderColor = 'var(--border)';
               }}>
+              
+              {/* Save button */}
+              <button
+                onClick={e => toggleSave(e, p.id)}
+                style={{
+                  position: 'absolute', top: 10, right: 10, zIndex: 10,
+                  width: 32, height: 32, borderRadius: '50%',
+                  background: isSaved(p.id)
+                    ? 'rgba(196,88,122,0.9)' : 'rgba(255,255,255,0.85)',
+                  backdropFilter: 'blur(8px)',
+                  border: 'none', fontSize: 14, cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  transition: 'all 0.2s',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                }}>
+                {isSaved(p.id) ? '❤️' : '🤍'}
+              </button>
+
               {/* Product Image */}
               <div style={{
                 height: 'clamp(160px,20vw,200px)',
