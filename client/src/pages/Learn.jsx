@@ -2,8 +2,12 @@ import { useState } from 'react';
 
 const COURSES = [
   {
-    title: 'How to Start a Small Business', icon: '🚀',
-    color: '#ffffff', textColor: '#7F77DD', duration: '6 lessons', level: 'Beginner',
+    title: 'How to Start a Small Business',
+    icon: '🚀',
+    color: '#f0eeff',
+    textColor: '#7F77DD',
+    duration: '6 lessons',
+    level: 'Beginner',
     lessons: [
       {
         title: 'Identifying your business idea',
@@ -19,7 +23,7 @@ Examples of great business ideas from everyday life:
 - Priya learned weaving from her grandmother → turned it into a handloom brand
 - Anita was always good at making jewellery → started selling online
 
-✅ Action Step: Write down 3 problems you see around you. Pick the one you can solve best.`,
+✅ Action Step: Write down 3 problems you see around you. Pick the one you can solve best.`
       },
       {
         title: 'Market research basics',
@@ -38,7 +42,7 @@ Key questions to answer:
 - Who are my competitors?
 - What makes my product different?
 
-✅ Action Step: Talk to 5 people today about your product idea and write down their feedback.`,
+✅ Action Step: Talk to 5 people today about your product idea and write down their feedback.`
       },
       {
         title: 'Writing a simple business plan',
@@ -63,7 +67,7 @@ Key questions to answer:
 6. MONTHLY TARGET: How much do you want to earn?
    Example: Sell 100 bars/month = ₹8,000 profit
 
-✅ Action Step: Fill in all 6 points above for your own business idea.`,
+✅ Action Step: Fill in all 6 points above for your own business idea.`
       },
       {
         title: 'Registering your business in India',
@@ -91,7 +95,7 @@ STAGE 4 — Scaling (Private Limited Company)
 - Register at mca.gov.in
 - Costs around ₹10,000-15,000 with a CA
 
-✅ Action Step: Start with Udyam Registration today — it's free and gives you MSME benefits.`,
+✅ Action Step: Start with Udyam Registration today — it's free and gives you MSME benefits.`
       },
       {
         title: 'Pricing your products correctly',
@@ -118,7 +122,7 @@ Common Pricing Mistakes:
 ❌ Pricing based on what competitors charge (without knowing their costs)
 ❌ Giving too many discounts that eat your profit
 
-✅ Action Step: Calculate the exact cost of making one of your products using the formula above.`,
+✅ Action Step: Calculate the exact cost of making one of your products using the formula above.`
       },
       {
         title: 'Setting up your online store on SafeHer',
@@ -150,13 +154,17 @@ STEP 5 — Manage Orders
 - Pack carefully, ship on time
 - Reply to customer questions quickly
 
-✅ You are ready! Add your first product to SafeHer today and start your entrepreneurial journey! 🎉`,
-      },
-    ],
+✅ You are ready! Add your first product to SafeHer today and start your entrepreneurial journey! 🎉`
+      }
+    ]
   },
   {
-    title: 'Digital Marketing for Beginners', icon: '📱',
-    color: '#ffffff', textColor: '#D4537E', duration: '5 lessons', level: 'Beginner',
+    title: 'Digital Marketing for Beginners',
+    icon: '📱',
+    color: '#fff0f6',
+    textColor: '#D4537E',
+    duration: '5 lessons',
+    level: 'Beginner',
     lessons: [
       {
         title: 'Introduction to social media marketing',
@@ -185,7 +193,7 @@ Content Formula (3-2-1 Rule):
 - 2 posts about behind-the-scenes/your story
 - 1 post asking a question or running a poll
 
-✅ Action Step: Create a WhatsApp Business account today and set up your product catalogue.`,
+✅ Action Step: Create a WhatsApp Business account today and set up your product catalogue.`
       },
       {
         title: 'Taking great product photos with your phone',
@@ -215,7 +223,7 @@ FREE EDITING APPS:
 - Lightroom Mobile — best for professional colour grading
 - Canva — best for adding text and branding
 
-✅ Action Step: Take 10 photos of your best product using these tips and compare with your previous photos.`,
+✅ Action Step: Take 10 photos of your best product using these tips and compare with your previous photos.`
       },
       {
         title: 'Writing product descriptions that sell',
@@ -245,7 +253,7 @@ FREE EDITING APPS:
 POWER WORDS that increase sales:
 Handcrafted, Authentic, Limited Edition, Natural, Traditional, Artisan, Pure, Organic, Exclusive
 
-✅ Action Step: Rewrite your best product description using this 5-question formula.`,
+✅ Action Step: Rewrite your best product description using this 5-question formula.`
       },
       {
         title: 'Running your first Facebook/Instagram ad',
@@ -278,7 +286,7 @@ MEASURING SUCCESS:
 - If it's higher, change your photo or caption
 - Run for 3-4 days before judging results
 
-✅ Action Step: Create your first Facebook Page and boost your best post with ₹50.`,
+✅ Action Step: Create your first Facebook Page and boost your best post with ₹50.`
       },
       {
         title: 'Building a loyal customer base',
@@ -312,13 +320,17 @@ WHAT TO DO WHEN SOMETHING GOES WRONG:
 - Offer a refund or replacement without argument
 - A resolved complaint often creates a more loyal customer than a smooth transaction
 
-✅ Action Step: Message your last 5 customers today and ask them how they liked the product.`,
-      },
-    ],
+✅ Action Step: Message your last 5 customers today and ask them how they liked the product.`
+      }
+    ]
   },
   {
-    title: 'Financial Literacy for Entrepreneurs', icon: '💰',
-    color: '#ffffff', textColor: '#BA7517', duration: '5 lessons', level: 'Intermediate',
+    title: 'Financial Literacy for Entrepreneurs',
+    icon: '💰',
+    color: '#fff8e6',
+    textColor: '#BA7517',
+    duration: '5 lessons',
+    level: 'Intermediate',
     lessons: [
       {
         title: 'Understanding profit and loss',
@@ -347,7 +359,7 @@ HOW TO TRACK DAILY:
 - Or use a free app like Khatabook or OkCredit (designed for Indian small businesses)
 - Review your numbers every Sunday evening
 
-✅ Action Step: Calculate last month's profit or loss using the formula above.`,
+✅ Action Step: Calculate last month's profit or loss using the formula above.`
       },
       {
         title: 'Managing cash flow',
@@ -377,7 +389,7 @@ TIPS:
 - If a customer hasn't paid, follow up politely after 7 days
 - Consider asking for 50% payment upfront for custom orders
 
-✅ Action Step: Open a separate bank account for your business today — even a simple savings account.`,
+✅ Action Step: Open a separate bank account for your business today — even a simple savings account.`
       },
       {
         title: 'Opening a business bank account',
@@ -408,7 +420,7 @@ WHAT TO DO WITH YOUR BUSINESS ACCOUNT:
 - Transfer your "salary" to personal account on a fixed date
 - Keep all account statements — needed for loan applications
 
-✅ Action Step: Visit your nearest bank this week and open a current account for your business.`,
+✅ Action Step: Visit your nearest bank this week and open a current account for your business.`
       },
       {
         title: 'Filing GST as a small business',
@@ -439,7 +451,7 @@ COST OF COMPLIANCE:
 - Use apps like ClearTax or Zoho Books for easy filing
 - Government portal is free to use yourself
 
-✅ Action Step: Calculate your last 12 months of sales to check if you need GST registration.`,
+✅ Action Step: Calculate your last 12 months of sales to check if you need GST registration.`
       },
       {
         title: 'Applying for a business loan',
@@ -477,13 +489,17 @@ TIPS FOR GETTING APPROVED:
 - Visit a bank where you already have an account — they know you
 - Bring your Udyam certificate — it shows you are serious
 
-✅ Action Step: Check your CIBIL score for free today at cibil.com using your PAN card.`,
-      },
-    ],
+✅ Action Step: Check your CIBIL score for free today at cibil.com using your PAN card.`
+      }
+    ]
   },
   {
-    title: 'Packaging & Branding Your Products', icon: '🎁',
-    color: '#ffffff', textColor: '#0F6E56', duration: '4 lessons', level: 'Beginner',
+    title: 'Packaging & Branding Your Products',
+    icon: '🎁',
+    color: '#eafaf3',
+    textColor: '#0F6E56',
+    duration: '4 lessons',
+    level: 'Beginner',
     lessons: [
       {
         title: 'Why packaging matters',
@@ -509,7 +525,7 @@ Start with Level 1 and move up as you grow. Even a simple sticker with your bran
 THE HANDWRITTEN NOTE:
 A small handwritten "Thank you [customer name]!" increases repeat purchase rate by 25%. It takes 30 seconds and costs nothing.
 
-✅ Action Step: Design a simple sticker label for your product on Canva (free) today.`,
+✅ Action Step: Design a simple sticker label for your product on Canva (free) today.`
       },
       {
         title: 'Low-cost packaging ideas',
@@ -544,7 +560,7 @@ ECO-FRIENDLY IDEAS (customers love this):
 - Newspaper wrapping instead of bubble wrap
 - Reusable cloth bags as packaging
 
-✅ Action Step: Order 100 custom stickers with your brand name and logo this week.`,
+✅ Action Step: Order 100 custom stickers with your brand name and logo this week.`
       },
       {
         title: 'Creating your brand logo for free',
@@ -582,7 +598,7 @@ FREE TOOLS:
 - Looka.com — AI generates logo options
 - Namecheap Logo Maker — free
 
-✅ Action Step: Create your brand logo on Canva today. Share it with 5 friends for feedback.`,
+✅ Action Step: Create your brand logo on Canva today. Share it with 5 friends for feedback.`
       },
       {
         title: 'Building customer trust through branding',
@@ -623,13 +639,17 @@ First time visitor → Curious buyer → First purchase → Satisfied customer �
 
 Your goal is to move every customer up this ladder.
 
-✅ Action Step: Write your brand story in 5 sentences. Pin it above your workspace as a daily reminder of why you do this.`,
-      },
-    ],
+✅ Action Step: Write your brand story in 5 sentences. Pin it above your workspace as a daily reminder of why you do this.`
+      }
+    ]
   },
   {
-    title: 'Legal Rights of Women Entrepreneurs', icon: '⚖️',
-    color: '#ffffff', textColor: '#185FA5', duration: '4 lessons', level: 'All Levels',
+    title: 'Legal Rights of Women Entrepreneurs',
+    icon: '⚖️',
+    color: '#e6f1fb',
+    textColor: '#185FA5',
+    duration: '4 lessons',
+    level: 'All Levels',
     lessons: [
       {
         title: 'Business structures in India',
@@ -665,7 +685,7 @@ Your goal is to move every customer up this ladder.
 RECOMMENDATION FOR MOST WOMEN ON SAFEHER:
 Start as Sole Proprietorship → Get Udyam Registration → Move to LLP or Pvt Ltd when you exceed ₹10 Lakhs annual revenue
 
-✅ Action Step: Register for free Udyam MSME certificate at udyamregistration.gov.in`,
+✅ Action Step: Register for free Udyam MSME certificate at udyamregistration.gov.in`
       },
       {
         title: 'Intellectual property basics',
@@ -698,7 +718,7 @@ WHAT TO DO IF SOMEONE COPIES YOU:
 3. Contact IP India helpline: 1800-111-549
 4. Consult a lawyer if serious — many offer free first consultations
 
-✅ Action Step: Apply for trademark of your brand name at ipindia.gov.in`,
+✅ Action Step: Apply for trademark of your brand name at ipindia.gov.in`
       },
       {
         title: 'Consumer protection laws',
@@ -736,7 +756,7 @@ COMPLAINT ESCALATION:
 - Or call 1915 (National Consumer Helpline — free)
 - District Consumer Forum handles disputes under ₹1 Crore
 
-✅ Action Step: Write a clear return policy for your products and add it to your SafeHer product listings.`,
+✅ Action Step: Write a clear return policy for your products and add it to your SafeHer product listings.`
       },
       {
         title: "Women's legal protections in business",
@@ -775,13 +795,17 @@ IMPORTANT GOVERNMENT PORTALS FOR WOMEN:
 - ondc.org — Open Network for Digital Commerce (sell everywhere)
 - gem.gov.in — Government e-Marketplace (sell to government)
 
-✅ Action Step: Register your business on wep.gov.in to access all government benefits for women entrepreneurs.`,
-      },
-    ],
+✅ Action Step: Register your business on wep.gov.in to access all government benefits for women entrepreneurs.`
+      }
+    ]
   },
   {
-    title: 'Shipping & Order Management', icon: '📦',
-    color: '#ffffff', textColor: '#854F0B', duration: '4 lessons', level: 'Beginner',
+    title: 'Shipping & Order Management',
+    icon: '📦',
+    color: '#fef3e2',
+    textColor: '#854F0B',
+    duration: '4 lessons',
+    level: 'Beginner',
     lessons: [
       {
         title: 'Setting up shipping on SafeHer',
@@ -812,7 +836,7 @@ OFFERING FREE SHIPPING:
 - "Free shipping on orders above ₹499" increases average order value
 - SafeHer recommends offering free shipping as it increases conversions by 30%
 
-✅ Action Step: Create a free account on Shiprocket (shiprocket.in) and explore their rates.`,
+✅ Action Step: Create a free account on Shiprocket (shiprocket.in) and explore their rates.`
       },
       {
         title: 'Packaging orders safely for shipping',
@@ -847,7 +871,7 @@ SEALING:
 - For liquids: double-seal in a ziplock bag first, then box
 - For powders: seal in airtight container, then wrap
 
-✅ Action Step: Buy a kitchen weighing scale (₹200-300 on Amazon) for accurate shipping cost calculation.`,
+✅ Action Step: Buy a kitchen weighing scale (₹200-300 on Amazon) for accurate shipping cost calculation.`
       },
       {
         title: 'Working with courier partners',
@@ -879,7 +903,7 @@ COD (Cash on Delivery) VS PREPAID:
 - Prepaid: Customer pays online. Faster payment for you, lower returns.
 - Recommendation: Offer both options. Prepaid gives 10% discount to encourage online payment.
 
-✅ Action Step: Ship your first order using India Post Speed Post — it is the simplest way to start.`,
+✅ Action Step: Ship your first order using India Post Speed Post — it is the simplest way to start.`
       },
       {
         title: 'Handling returns and complaints professionally',
@@ -921,10 +945,10 @@ WHAT TO NEVER DO:
 - Never offer a partial refund without explanation
 - Never blame the courier to the customer (it is your responsibility)
 
-✅ Action Step: Write a return policy for your business right now. Keep it fair, clear and simple.`,
-      },
-    ],
-  },
+✅ Action Step: Write a return policy for your business right now. Keep it fair, clear and simple.`
+      }
+    ]
+  }
 ];
 
 const TIPS = [
@@ -947,70 +971,36 @@ export default function Learn() {
   };
 
   const getCourseProgress = (course) => {
-    const done = course.lessons.filter((_, i) =>
-      completedLessons[`${course.title}-${i}`]
-    ).length;
+    const done = course.lessons.filter((_, i) => completedLessons[`${course.title}-${i}`]).length;
     return Math.round((done / course.lessons.length) * 100);
   };
 
   if (selectedLesson) {
     const { course, lesson, index } = selectedLesson;
     return (
-      <div style={{ maxWidth: 760, margin: '32px auto', padding: '0 24px 60px' }}>
-        <button onClick={() => setSelectedLesson(null)} style={{
-          background: 'none', border: '1.5px solid #ede8ff', color: '#7F77DD',
-          padding: '8px 16px', borderRadius: 10, fontSize: 13,
-          fontWeight: 500, marginBottom: 24, cursor: 'pointer' }}>
+      <div style={{ maxWidth: 760, margin: '0 auto', padding: 'clamp(14px,4vw,32px) clamp(12px,3vw,24px) 60px' }}>
+        <button onClick={() => setSelectedLesson(null)} style={{ background: 'none', border: '1.5px solid #ede8ff', color: '#7F77DD', padding: '8px 16px', borderRadius: 10, fontSize: 13, fontWeight: 500, marginBottom: 20, cursor: 'pointer', fontFamily: 'inherit' }}>
           ← Back to Course
         </button>
-        <div style={{ background: '#fff', borderRadius: 20, padding: 36,
-          boxShadow: '0 4px 32px rgba(127,119,221,0.12)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12,
-            marginBottom: 20 }}>
-            <span style={{ fontSize: 36 }}>{course.icon}</span>
-            <div>
-              <p style={{ fontSize: 12, color: '#aaa', marginBottom: 2 }}>
-                {course.title} · Lesson {index + 1}
-              </p>
-              <h2 style={{ fontFamily: 'Playfair Display, serif',
-                fontSize: 22, fontWeight: 600 }}>{lesson.title}</h2>
+        <div style={{ background: '#fff', borderRadius: 20, padding: 'clamp(18px,4vw,36px)', boxShadow: '0 4px 32px rgba(127,119,221,0.12)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20, flexWrap: 'wrap' }}>
+            <span style={{ fontSize: 'clamp(28px,5vw,36px)' }}>{course.icon}</span>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={{ fontSize: 11, color: '#aaa', marginBottom: 2 }}>{course.title} · Lesson {index + 1}</p>
+              <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(15px,3vw,22px)', fontWeight: 600, lineHeight: 1.3 }}>{lesson.title}</h2>
             </div>
           </div>
-          <div style={{ background: '#f7f5ff', borderRadius: 12, padding: 24,
-            marginBottom: 24, fontSize: 14, color: '#444', lineHeight: 2,
-            whiteSpace: 'pre-line', border: '1px solid #ede8ff' }}>
+          <div style={{ background: '#f7f5ff', borderRadius: 12, padding: 'clamp(14px,3vw,24px)', marginBottom: 20, fontSize: 'clamp(12px,2vw,14px)', color: '#444', lineHeight: 1.8, whiteSpace: 'pre-wrap', border: '1px solid #ede8ff' }}>
             {lesson.content}
           </div>
-          <div style={{ display: 'flex', gap: 12 }}>
-            <button onClick={() => {
-              toggleLesson(course.title, index);
-              setSelectedLesson(null);
-            }} style={{
-              background: completedLessons[`${course.title}-${index}`]
-                ? '#f0eeff' : 'linear-gradient(135deg, #7F77DD, #D4537E)',
-              color: completedLessons[`${course.title}-${index}`]
-                ? '#7F77DD' : '#fff',
-              border: completedLessons[`${course.title}-${index}`]
-                ? '1.5px solid #7F77DD' : 'none',
-              padding: '12px 24px', borderRadius: 10, fontSize: 14,
-              fontWeight: 600, cursor: 'pointer' }}>
-              {completedLessons[`${course.title}-${index}`]
-                ? '↩ Mark as Incomplete' : '✓ Mark as Complete'}
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            <button onClick={() => { toggleLesson(course.title, index); setSelectedLesson(null); }}
+              style={{ background: completedLessons[`${course.title}-${index}`] ? '#f0eeff' : 'linear-gradient(135deg, #7F77DD, #D4537E)', color: completedLessons[`${course.title}-${index}`] ? '#7F77DD' : '#fff', border: completedLessons[`${course.title}-${index}`] ? '1.5px solid #7F77DD' : 'none', padding: '11px clamp(14px,3vw,24px)', borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
+              {completedLessons[`${course.title}-${index}`] ? '↩ Mark as Incomplete' : '✓ Mark as Complete'}
             </button>
             {index < course.lessons.length - 1 && (
-              <button onClick={() => {
-                if (!completedLessons[`${course.title}-${index}`])
-                  toggleLesson(course.title, index);
-                setSelectedLesson({
-                  course,
-                  lesson: course.lessons[index + 1],
-                  index: index + 1
-                });
-              }} style={{
-                background: '#f0eeff', color: '#7F77DD',
-                border: '1.5px solid #7F77DD', padding: '12px 24px',
-                borderRadius: 10, fontSize: 14, fontWeight: 600,
-                cursor: 'pointer' }}>
+              <button onClick={() => { if (!completedLessons[`${course.title}-${index}`]) toggleLesson(course.title, index); setSelectedLesson({ course, lesson: course.lessons[index + 1], index: index + 1 }); }}
+                style={{ background: '#f0eeff', color: '#7F77DD', border: '1.5px solid #7F77DD', padding: '11px clamp(14px,3vw,24px)', borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
                 Next Lesson →
               </button>
             )}
@@ -1024,76 +1014,45 @@ export default function Learn() {
     const course = selectedCourse;
     const progress = getCourseProgress(course);
     return (
-      <div style={{ maxWidth: 760, margin: '32px auto', padding: '0 24px 60px' }}>
-        <button onClick={() => setSelectedCourse(null)} style={{
-          background: 'none', border: '1.5px solid #ede8ff', color: '#7F77DD',
-          padding: '8px 16px', borderRadius: 10, fontSize: 13,
-          fontWeight: 500, marginBottom: 24, cursor: 'pointer' }}>
+      <div style={{ maxWidth: 760, margin: '0 auto', padding: 'clamp(14px,4vw,32px) clamp(12px,3vw,24px) 60px' }}>
+        <button onClick={() => setSelectedCourse(null)} style={{ background: 'none', border: '1.5px solid #ede8ff', color: '#7F77DD', padding: '8px 16px', borderRadius: 10, fontSize: 13, fontWeight: 500, marginBottom: 20, cursor: 'pointer', fontFamily: 'inherit' }}>
           ← Back to Courses
         </button>
-        <div style={{ background: '#fff', borderRadius: 20, overflow: 'hidden',
-          boxShadow: '0 4px 32px rgba(127,119,221,0.12)' }}>
-          <div style={{ background: `linear-gradient(135deg, ${course.color}, #fff)`,
-            padding: '32px' }}>
-            <span style={{ fontSize: 48 }}>{course.icon}</span>
-            <h2 style={{ fontFamily: 'Playfair Display, serif', fontSize: 26,
-              fontWeight: 600, marginTop: 12, marginBottom: 8 }}>
-              {course.title}
-            </h2>
-            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-              <span style={{ fontSize: 12, background: 'rgba(255,255,255,0.8)',
-                color: course.textColor, padding: '4px 12px',
-                borderRadius: 20, fontWeight: 500 }}>{course.duration}</span>
-              <span style={{ fontSize: 12, background: 'rgba(255,255,255,0.8)',
-                color: '#888', padding: '4px 12px',
-                borderRadius: 20 }}>{course.level}</span>
+        <div style={{ background: '#fff', borderRadius: 20, overflow: 'hidden', boxShadow: '0 4px 32px rgba(127,119,221,0.12)' }}>
+          <div style={{ background: `linear-gradient(135deg, ${course.color}, #fff)`, padding: 'clamp(18px,3vw,32px)' }}>
+            <span style={{ fontSize: 'clamp(36px,6vw,48px)' }}>{course.icon}</span>
+            <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(18px,3vw,26px)', fontWeight: 700, marginTop: 10, marginBottom: 8 }}>{course.title}</h2>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              <span style={{ fontSize: 11, background: 'rgba(255,255,255,0.8)', color: course.textColor, padding: '3px 10px', borderRadius: 20, fontWeight: 600 }}>{course.duration}</span>
+              <span style={{ fontSize: 11, background: 'rgba(255,255,255,0.8)', color: '#888', padding: '3px 10px', borderRadius: 20 }}>{course.level}</span>
             </div>
             {progress > 0 && (
-              <div style={{ marginTop: 16 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between',
-                  marginBottom: 6, fontSize: 13 }}>
+              <div style={{ marginTop: 14 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5, fontSize: 12 }}>
                   <span style={{ color: '#555' }}>Progress</span>
-                  <span style={{ fontWeight: 600,
-                    color: course.textColor }}>{progress}%</span>
+                  <span style={{ fontWeight: 600, color: course.textColor }}>{progress}%</span>
                 </div>
-                <div style={{ height: 8, background: 'rgba(255,255,255,0.5)',
-                  borderRadius: 4, overflow: 'hidden' }}>
-                  <div style={{ height: '100%', borderRadius: 4,
-                    background: `linear-gradient(90deg, ${course.textColor}, #D4537E)`,
-                    width: `${progress}%`, transition: 'width 0.3s' }} />
+                <div style={{ height: 7, background: 'rgba(255,255,255,0.5)', borderRadius: 4, overflow: 'hidden' }}>
+                  <div style={{ height: '100%', borderRadius: 4, background: `linear-gradient(90deg, ${course.textColor}, #D4537E)`, width: `${progress}%`, transition: 'width 0.3s' }} />
                 </div>
               </div>
             )}
           </div>
-          <div style={{ padding: '24px 32px' }}>
+          <div style={{ padding: 'clamp(14px,2vw,24px) clamp(14px,3vw,32px)' }}>
             {course.lessons.map((lesson, i) => {
               const key = `${course.title}-${i}`;
               const done = completedLessons[key];
               return (
                 <div key={i} onClick={() => setSelectedLesson({ course, lesson, index: i })}
-                  style={{ display: 'flex', alignItems: 'center', gap: 14,
-                    padding: '14px 16px', borderRadius: 12, marginBottom: 8,
-                    cursor: 'pointer', transition: 'background 0.15s',
-                    background: done ? '#f0fff4' : '#faf9ff',
-                    border: `1.5px solid ${done ? '#b2f5d0' : '#f0eeff'}` }}>
-                  <div style={{ width: 32, height: 32, borderRadius: '50%',
-                    background: done
-                      ? 'linear-gradient(135deg, #1D9E75, #0F6E56)' : '#f0eeff',
-                    display: 'flex', alignItems: 'center',
-                    justifyContent: 'center', flexShrink: 0,
-                    color: done ? '#fff' : '#7F77DD',
-                    fontSize: done ? 14 : 13, fontWeight: 600 }}>
+                  style={{ display: 'flex', alignItems: 'center', gap: 10, padding: 'clamp(10px,2vw,14px) clamp(10px,2vw,16px)', borderRadius: 12, marginBottom: 8, cursor: 'pointer', background: done ? '#f0fff4' : '#faf9ff', border: `1.5px solid ${done ? '#b2f5d0' : '#f0eeff'}`, transition: 'background 0.15s' }}>
+                  <div style={{ width: 28, height: 28, borderRadius: '50%', background: done ? 'linear-gradient(135deg, #1D9E75, #0F6E56)' : '#f0eeff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: done ? '#fff' : '#7F77DD', fontSize: 12, fontWeight: 700 }}>
                     {done ? '✓' : i + 1}
                   </div>
-                  <div style={{ flex: 1 }}>
-                    <p style={{ fontSize: 14, fontWeight: 500,
-                      color: done ? '#0F6E56' : '#1a1a2e' }}>
-                      {lesson.title}
-                    </p>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontSize: 'clamp(12px,2vw,14px)', fontWeight: 500, color: done ? '#0F6E56' : '#1a1a2e', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{lesson.title}</p>
                   </div>
-                  <span style={{ fontSize: 12, color: '#aaa',
-                    flexShrink: 0 }}>{lesson.duration}</span>
-                  <span style={{ fontSize: 12, color: '#7F77DD' }}>→</span>
+                  <span style={{ fontSize: 11, color: '#aaa', flexShrink: 0, whiteSpace: 'nowrap' }}>{lesson.duration}</span>
+                  <span style={{ fontSize: 12, color: '#7F77DD', flexShrink: 0 }}>→</span>
                 </div>
               );
             })}
@@ -1104,87 +1063,46 @@ export default function Learn() {
   }
 
   return (
-    <div style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 24px 60px' }}>
-      <div style={{ background: 'linear-gradient(135deg, #185FA5, #7F77DD)',
-        borderRadius: 20, padding: '48px 40px', marginBottom: 48,
-        color: '#fff', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: -40, right: -40, width: 220,
-          height: 220, borderRadius: '50%',
-          background: 'rgba(255,255,255,0.07)' }} />
-        <p style={{ fontSize: 12, fontWeight: 600, opacity: 0.75,
-          letterSpacing: 2, textTransform: 'uppercase', marginBottom: 12 }}>
-          Free Learning Resources
-        </p>
-        <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: 40,
-          fontWeight: 600, marginBottom: 12 }}>Learning Hub</h1>
-        <p style={{ opacity: 0.85, fontSize: 16, maxWidth: 520, lineHeight: 1.7 }}>
-          Free business courses designed specifically for women entrepreneurs.
-          Click any lesson to read the full content and mark it complete.
-        </p>
+    <div style={{ maxWidth: 1100, margin: '0 auto', padding: 'clamp(14px,4vw,32px) clamp(12px,3vw,24px) 60px' }}>
+      <div style={{ background: 'linear-gradient(135deg, #185FA5, #7F77DD)', borderRadius: 20, padding: 'clamp(24px,5vw,48px) clamp(18px,4vw,40px)', marginBottom: 32, color: '#fff', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: -40, right: -40, width: 220, height: 220, borderRadius: '50%', background: 'rgba(255,255,255,0.07)' }} />
+        <p style={{ fontSize: 11, fontWeight: 700, opacity: 0.75, letterSpacing: 2, textTransform: 'uppercase', marginBottom: 10 }}>Free Learning Resources</p>
+        <h1 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(26px,6vw,40px)', fontWeight: 700, marginBottom: 12 }}>Learning Hub</h1>
+        <p style={{ opacity: 0.85, fontSize: 'clamp(13px,2vw,16px)', maxWidth: 520, lineHeight: 1.7 }}>Free business courses designed specifically for women entrepreneurs. Click any lesson to read the full content and mark it complete.</p>
       </div>
 
-      <h2 style={{ fontFamily: 'Playfair Display, serif', fontSize: 24,
-        fontWeight: 600, marginBottom: 20 }}>Free Courses</h2>
+      <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(18px,3vw,24px)', fontWeight: 700, marginBottom: 18 }}>Free Courses</h2>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)',
-        gap: 20, marginBottom: 48 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(260px, 100%), 1fr))', gap: 'clamp(10px,2vw,20px)', marginBottom: 36 }}>
         {COURSES.map(course => {
           const progress = getCourseProgress(course);
           return (
             <div key={course.title} onClick={() => setSelectedCourse(course)}
-              style={{ background: '#fff', borderRadius: 16, overflow: 'hidden',
-                boxShadow: '0 2px 16px rgba(127,119,221,0.08)', cursor: 'pointer',
-                transition: 'transform 0.2s, box-shadow 0.2s',
-                border: '0.5px solid #f0eeff' }}
-              onMouseEnter={e => {
-                e.currentTarget.style.transform = 'translateY(-3px)';
-                e.currentTarget.style.boxShadow = '0 8px 28px rgba(127,119,221,0.15)';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 2px 16px rgba(127,119,221,0.08)';
-              }}>
-              <div style={{ background: course.color, padding: '24px 20px 16px' }}>
-                <span style={{ fontSize: 36 }}>{course.icon}</span>
-                <h3 style={{ fontSize: 15, fontWeight: 600, marginTop: 10,
-                  lineHeight: 1.4, color: '#1a1a2e' }}>{course.title}</h3>
-                <div style={{ display: 'flex', gap: 8, marginTop: 8,
-                  flexWrap: 'wrap' }}>
-                  <span style={{ fontSize: 11, background: 'rgba(255,255,255,0.7)',
-                    color: course.textColor, padding: '3px 8px',
-                    borderRadius: 20, fontWeight: 500 }}>{course.duration}</span>
-                  <span style={{ fontSize: 11, background: 'rgba(255,255,255,0.7)',
-                    color: '#888', padding: '3px 8px',
-                    borderRadius: 20 }}>{course.level}</span>
+              style={{ background: '#fff', borderRadius: 16, overflow: 'hidden', boxShadow: '0 2px 16px rgba(127,119,221,0.08)', cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s', border: '0.5px solid #f0eeff' }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(127,119,221,0.15)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 16px rgba(127,119,221,0.08)'; }}>
+              <div style={{ background: course.color, padding: 'clamp(14px,2vw,24px) clamp(12px,2vw,20px) clamp(10px,2vw,16px)' }}>
+                <span style={{ fontSize: 'clamp(28px,5vw,36px)' }}>{course.icon}</span>
+                <h3 style={{ fontSize: 'clamp(12px,2vw,15px)', fontWeight: 600, marginTop: 10, lineHeight: 1.4, color: '#1a1a2e' }}>{course.title}</h3>
+                <div style={{ display: 'flex', gap: 6, marginTop: 8, flexWrap: 'wrap' }}>
+                  <span style={{ fontSize: 10, background: 'rgba(255,255,255,0.7)', color: course.textColor, padding: '2px 8px', borderRadius: 20, fontWeight: 600 }}>{course.duration}</span>
+                  <span style={{ fontSize: 10, background: 'rgba(255,255,255,0.7)', color: '#888', padding: '2px 8px', borderRadius: 20 }}>{course.level}</span>
                 </div>
               </div>
-              <div style={{ padding: '14px 20px 20px' }}>
+              <div style={{ padding: 'clamp(10px,2vw,14px) clamp(12px,2vw,20px) clamp(12px,2vw,20px)' }}>
                 {progress > 0 && (
-                  <div style={{ marginBottom: 12 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between',
-                      marginBottom: 4, fontSize: 12 }}>
+                  <div style={{ marginBottom: 10 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4, fontSize: 11 }}>
                       <span style={{ color: '#888' }}>Progress</span>
-                      <span style={{ fontWeight: 600,
-                        color: course.textColor }}>{progress}%</span>
+                      <span style={{ fontWeight: 600, color: course.textColor }}>{progress}%</span>
                     </div>
-                    <div style={{ height: 6, background: '#f0eeff',
-                      borderRadius: 3, overflow: 'hidden' }}>
-                      <div style={{ height: '100%', borderRadius: 3,
-                        background: `linear-gradient(90deg, ${course.textColor}, #D4537E)`,
-                        width: `${progress}%` }} />
+                    <div style={{ height: 5, background: '#f0eeff', borderRadius: 3, overflow: 'hidden' }}>
+                      <div style={{ height: '100%', borderRadius: 3, background: `linear-gradient(90deg, ${course.textColor}, #D4537E)`, width: `${progress}%` }} />
                     </div>
                   </div>
                 )}
-                <button style={{ width: '100%',
-                  background: progress === 100 ? '#eafaf3'
-                    : progress > 0 ? `linear-gradient(135deg, ${course.textColor}, #D4537E)`
-                    : '#f0eeff',
-                  color: progress === 100 ? '#0F6E56'
-                    : progress > 0 ? '#fff' : course.textColor,
-                  border: 'none', padding: '10px', borderRadius: 10,
-                  fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
-                  {progress === 100 ? '✓ Completed'
-                    : progress > 0 ? 'Continue Learning' : 'Start Course →'}
+                <button style={{ width: '100%', background: progress === 100 ? '#eafaf3' : progress > 0 ? `linear-gradient(135deg, ${course.textColor}, #D4537E)` : '#f0eeff', color: progress === 100 ? '#0F6E56' : progress > 0 ? '#fff' : course.textColor, border: 'none', padding: '9px', borderRadius: 10, fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
+                  {progress === 100 ? '✓ Completed' : progress > 0 ? 'Continue Learning' : 'Start Course →'}
                 </button>
               </div>
             </div>
@@ -1192,16 +1110,13 @@ export default function Learn() {
         })}
       </div>
 
-      <h2 style={{ fontFamily: 'Playfair Display, serif', fontSize: 24,
-        fontWeight: 600, marginBottom: 20 }}>Quick Business Tips</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14 }}>
+      <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(18px,3vw,24px)', fontWeight: 700, marginBottom: 18 }}>Quick Business Tips</h2>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))', gap: 'clamp(10px,2vw,14px)' }}>
         {TIPS.map((t, i) => (
-          <div key={i} style={{ background: '#fff', borderRadius: 14, padding: 18,
-            boxShadow: '0 2px 12px rgba(127,119,221,0.07)',
-            border: '0.5px solid #f0eeff',
-            display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-            <span style={{ fontSize: 24, flexShrink: 0 }}>{t.icon}</span>
-            <p style={{ fontSize: 13, color: '#555', lineHeight: 1.7 }}>{t.tip}</p>
+          <div key={i} style={{ background: '#fff', borderRadius: 14, padding: 'clamp(12px,2vw,18px)', boxShadow: '0 2px 12px rgba(127,119,221,0.07)', border: '0.5px solid #f0eeff', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+            <span style={{ fontSize: 'clamp(18px,3vw,24px)', flexShrink: 0 }}>{t.icon}</span>
+            <p style={{ fontSize: 'clamp(12px,1.8vw,13px)', color: '#555', lineHeight: 1.7 }}>{t.tip}</p>
           </div>
         ))}
       </div>
